@@ -2,11 +2,8 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIOLOMEMO - Sistema de Estudos</title>
-    
-    <meta name="theme-color" content="#0a0a16">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Palácio da Biologia - BIOLOMEMO</title>
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -14,25 +11,17 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;900&family=Source+Code+Pro:wght@300;400;600&display=swap" rel="stylesheet">
     
-    <!-- Chart.js para gráficos -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
     <style>
         /* ========== VARIÁVEIS E RESET ========== */
         :root {
-            --cell-blue: #0ea5e9;
-            --membrane-purple: #8b5cf6;
-            --mitochondria-green: #10b981;
-            --nucleus-red: #ef4444;
-            --lysosome-yellow: #f59e0b;
-            --golgi-orange: #f97316;
-            --er-indigo: #6366f1;
-            --deep-space: #0a0a16;
-            --panel-dark: #151530;
-            --panel-light: #1e293b;
+            --primary-green: #10b981;
+            --secondary-green: #059669;
+            --dark-green: #064e3b;
+            --light-green: #a7f3d0;
+            --background-dark: #0a0a16;
+            --card-dark: #151530;
             --text-primary: #ffffff;
             --text-secondary: rgba(255, 255, 255, 0.7);
-            --text-dim: rgba(255, 255, 255, 0.5);
         }
 
         * {
@@ -44,15 +33,14 @@
         }
 
         body {
-            background: var(--deep-space);
+            background: var(--background-dark);
             color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
-            padding-bottom: 100px; /* Espaço para o dashboard fixo */
         }
 
-        /* ========== FUNDO CELULAR ANIMADO ========== */
-        .cell-bg {
+        /* ========== FUNDO ANIMADO ========== */
+        .animated-bg {
             position: fixed;
             top: 0;
             left: 0;
@@ -60,63 +48,26 @@
             height: 100%;
             z-index: -1;
             background: 
-                radial-gradient(circle at 20% 30%, rgba(14, 165, 233, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.06) 0%, transparent 40%),
-                linear-gradient(135deg, #0a0a16 0%, #0f0f25 100%);
+                radial-gradient(circle at 20% 30%, rgba(16, 185, 129, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(5, 150, 105, 0.08) 0%, transparent 40%),
+                linear-gradient(135deg, #0a0a16 0%, #0f172a 100%);
             overflow: hidden;
         }
 
-        .organelle {
+        .floating-particle {
             position: absolute;
             border-radius: 50%;
-            animation: floatOrganelle 20s infinite linear;
+            background: radial-gradient(circle, var(--primary-green), transparent);
+            animation: floatParticle 20s infinite linear;
             opacity: 0.1;
-            filter: blur(1px);
         }
 
-        .mitochondria {
-            background: radial-gradient(circle, var(--mitochondria-green), transparent);
-            width: 40px;
-            height: 20px;
-            animation: floatMitochondria 15s infinite linear;
-        }
-
-        .ribosome {
-            background: radial-gradient(circle, var(--nucleus-red), transparent);
-            width: 8px;
-            height: 8px;
-            animation: floatRibosome 10s infinite linear;
-        }
-
-        .vesicle {
-            background: radial-gradient(circle, var(--golgi-orange), transparent);
-            width: 15px;
-            height: 15px;
-            animation: floatVesicle 12s infinite linear;
-        }
-
-        @keyframes floatOrganelle {
+        @keyframes floatParticle {
             0% { transform: translateY(0) translateX(0); }
             100% { transform: translateY(-100vh) translateX(100px); }
         }
 
-        @keyframes floatMitochondria {
-            0%, 100% { transform: translateY(0) rotate(0deg); border-radius: 50% 30% 50% 30%; }
-            50% { transform: translateY(-20px) rotate(180deg); border-radius: 30% 50% 30% 50%; }
-        }
-
-        @keyframes floatRibosome {
-            0%, 100% { transform: scale(1); opacity: 0.1; }
-            50% { transform: scale(1.5); opacity: 0.3; }
-        }
-
-        @keyframes floatVesicle {
-            0% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-30px) scale(1.2); }
-            100% { transform: translateY(0) scale(1); }
-        }
-
-        /* ========== HEADER PRINCIPAL ========== */
+        /* ========== HEADER ========== */
         .main-header {
             position: fixed;
             top: 0;
@@ -124,7 +75,7 @@
             width: 100%;
             background: rgba(10, 10, 22, 0.95);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(14, 165, 233, 0.3);
+            border-bottom: 1px solid rgba(16, 185, 129, 0.3);
             z-index: 1000;
             padding: 15px 20px;
             display: flex;
@@ -138,22 +89,15 @@
             gap: 15px;
         }
 
-        .logo {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(45deg, var(--cell-blue), var(--membrane-purple));
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
+        .logo-icon {
+            font-size: 1.8rem;
+            color: var(--primary-green);
         }
 
         .header-title {
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            background: linear-gradient(45deg, var(--cell-blue), var(--membrane-purple));
+            background: linear-gradient(45deg, var(--primary-green), var(--light-green));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -180,155 +124,98 @@
         }
 
         .header-btn:hover {
-            color: var(--cell-blue);
-            border-color: var(--cell-blue);
+            color: var(--primary-green);
+            border-color: var(--primary-green);
             transform: translateY(-2px);
         }
 
-        /* ========== TEXTO HACKER ANIMADO ========== */
-        .hacker-container {
-            width: 100%;
-            overflow: hidden;
-            position: relative;
-            height: 60px;
-            margin: 90px auto 20px;
-            max-width: 1200px;
-        }
-
-        .hacker-text {
-            font-family: 'Source Code Pro', monospace;
-            font-size: 0.9rem;
-            color: var(--cell-blue);
-            position: absolute;
-            white-space: nowrap;
-            animation: hackerScroll 20s linear infinite;
-            text-shadow: 0 0 8px rgba(14, 165, 233, 0.5);
-            letter-spacing: 1px;
-        }
-
-        @keyframes hackerScroll {
-            0% {
-                left: 100%;
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                left: -100%;
-                opacity: 0;
-            }
-        }
-
-        .hacker-title {
-            text-align: center;
-            font-family: 'Source Code Pro', monospace;
-            font-size: 1.6rem;
-            color: var(--cell-blue);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 0 12px rgba(14, 165, 233, 0.7);
-            position: relative;
-        }
-
-        .hacker-title::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 180px;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--cell-blue), transparent);
-        }
-
-        .hacker-subtitle {
-            text-align: center;
-            font-family: 'Source Code Pro', monospace;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            margin-bottom: 30px;
-            line-height: 1.4;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-            padding: 0 20px;
-        }
-
-        .signature {
-            text-align: center;
-            font-family: 'Source Code Pro', monospace;
-            color: var(--membrane-purple);
-            font-size: 0.9rem;
-            margin: 15px 0 30px;
-            letter-spacing: 1.5px;
-        }
-
-        .signature strong {
-            color: var(--cell-blue);
-            text-shadow: 0 0 8px rgba(14, 165, 233, 0.5);
-        }
-
-        /* ========== SEÇÕES E TÓPICOS ========== */
+        /* ========== CONTEÚDO PRINCIPAL ========== */
         .main-content {
-            padding: 0 20px 50px;
-            max-width: 1200px;
+            padding: 100px 20px 50px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
-        .section {
-            width: 100%;
-            margin: 35px 0 15px;
+        .intro-section {
             text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .intro-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary-green), var(--light-green));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .intro-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+
+        .intro-btn {
+            padding: 15px 40px;
+            background: linear-gradient(45deg, var(--primary-green), var(--secondary-green));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+        }
+
+        .intro-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.4);
+        }
+
+        .section {
+            margin-bottom: 60px;
         }
 
         .section-title {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
-            color: var(--cell-blue);
-            margin-bottom: 25px;
+            color: var(--primary-green);
+            margin-bottom: 30px;
+            text-align: center;
             position: relative;
-            display: inline-block;
-            padding: 0 15px;
-        }
-
-        .section-title::before, .section-title::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: 60px;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--cell-blue), transparent);
-        }
-
-        .section-title::before {
-            right: 100%;
-        }
-
-        .section-title::after {
-            left: 100%;
-        }
-
-        .topics-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            display: flex;
+            align-items: center;
+            justify-content: center;
             gap: 15px;
-            width: 100%;
-            margin-top: 15px;
-            justify-items: center;
+        }
+
+        .section-title::before,
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-green), transparent);
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 25px;
         }
 
         .topic-card {
             background: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(14, 165, 233, 0.3);
-            border-radius: 12px;
-            padding: 18px 12px;
-            width: 150px;
-            height: 150px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -337,308 +224,103 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            backdrop-filter: blur(10px);
+            min-height: 160px;
+            text-decoration: none;
+            color: inherit;
         }
 
         .topic-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--cell-blue);
-            background: rgba(14, 165, 233, 0.1);
-            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.2);
-        }
-
-        .topic-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(14, 165, 233, 0.1), transparent);
-            transition: left 0.5s;
-        }
-
-        .topic-card:hover::before {
-            left: 100%;
+            transform: translateY(-5px);
+            border-color: var(--primary-green);
+            background: rgba(16, 185, 129, 0.1);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2);
         }
 
         .topic-number {
             position: absolute;
-            top: 8px;
-            left: 8px;
-            font-size: 0.85rem;
-            color: var(--cell-blue);
-            font-weight: bold;
-            background: rgba(14, 165, 233, 0.1);
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            top: 10px;
+            left: 10px;
+            font-size: 0.9rem;
+            color: var(--primary-green);
+            font-weight: 700;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 2px 8px;
+            border-radius: 20px;
         }
 
         .topic-icon {
-            font-size: 2.4rem;
-            margin-bottom: 12px;
-            color: var(--cell-blue);
+            font-size: 2.5rem;
+            margin-bottom: 15px;
             transition: all 0.3s ease;
         }
 
         .topic-card:hover .topic-icon {
-            transform: scale(1.05);
-            filter: drop-shadow(0 0 8px rgba(14, 165, 233, 0.4));
+            transform: scale(1.1);
         }
 
         .topic-title {
-            font-size: 0.85rem;
-            color: var(--text-primary);
-            font-weight: 500;
-            line-height: 1.2;
+            font-size: 0.95rem;
             text-align: center;
-        }
-
-        /* ========== INDICADOR DE PROGRESSO NOS CARDS ========== */
-        .progress-indicator {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 26px;
-            height: 26px;
-        }
-
-        .progress-circle {
-            width: 100%;
-            height: 100%;
-            transform: rotate(-90deg);
-        }
-
-        .progress-circle-bg {
-            fill: none;
-            stroke: rgba(255, 255, 255, 0.1);
-            stroke-width: 2.5;
-        }
-
-        .progress-circle-fill {
-            fill: none;
-            stroke: var(--mitochondria-green);
-            stroke-width: 2.5;
-            stroke-linecap: round;
-            transition: stroke-dashoffset 0.5s ease;
-        }
-
-        .progress-percent {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 0.55rem;
-            font-weight: bold;
-            color: var(--text-primary);
-        }
-
-        /* ========== DASHBOARD DE PROGRESSO FIXO ========== */
-        .dashboard-fixed {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(10, 10, 22, 0.95);
-            backdrop-filter: blur(15px);
-            border-top: 1px solid rgba(14, 165, 233, 0.3);
-            z-index: 999;
-            padding: 15px 20px;
-            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
-            max-height: 120px;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-
-        .dashboard-fixed.expanded {
-            max-height: 400px;
-        }
-
-        .dashboard-toggle {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .dashboard-title {
-            font-size: 1rem;
-            color: var(--cell-blue);
-            display: flex;
-            align-items: center;
-            gap: 8px;
             font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.3;
         }
 
-        .toggle-icon {
-            transition: transform 0.3s ease;
-            color: var(--cell-blue);
-        }
-
-        .dashboard-fixed.expanded .toggle-icon {
-            transform: rotate(180deg);
-        }
-
-        .dashboard-grid-compact {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .stat-card-compact {
-            background: rgba(30, 41, 59, 0.6);
-            border-radius: 8px;
-            padding: 10px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .stat-value-compact {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--cell-blue);
-            margin-bottom: 3px;
-        }
-
-        .stat-label-compact {
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-        }
-
-        .progress-visual-compact {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            margin-top: 10px;
-            max-height: 150px;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
-
-        .progress-dot-compact {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: bold;
-            color: var(--text-dim);
-            transition: all 0.2s ease;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .progress-dot-compact.studied {
-            background: var(--mitochondria-green);
-            color: white;
-            box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
-        }
-
-        .progress-dot-compact.in-progress {
-            background: var(--cell-blue);
-            color: white;
-            box-shadow: 0 0 8px rgba(14, 165, 233, 0.4);
-        }
-
-        .progress-dot-compact:hover::after {
-            content: attr(data-title);
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(30, 41, 59, 0.95);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.65rem;
-            white-space: nowrap;
-            border: 1px solid var(--cell-blue);
-            z-index: 100;
-            margin-bottom: 5px;
-        }
-
-        /* ========== MODAL DE TÓPICO ========== */
-        .modal {
+        /* ========== MODAL (apenas para ajuda) ========== */
+        .modal-overlay {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(5, 5, 15, 0.95);
+            background: rgba(0, 0, 0, 0.8);
             z-index: 2000;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(10px);
             padding: 20px;
-        }
-
-        .modal.active {
-            display: flex;
-            animation: modalFadeIn 0.3s ease;
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            backdrop-filter: blur(10px);
         }
 
         .modal-content {
-            background: var(--panel-dark);
-            border-radius: 15px;
-            width: 95%;
-            max-width: 800px;
-            max-height: 85vh;
-            border: 1px solid var(--cell-blue);
+            background: var(--card-dark);
+            border-radius: 20px;
+            border: 1px solid var(--primary-green);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
             overflow: hidden;
-            backdrop-filter: blur(20px);
-            animation: modalSlideIn 0.3s ease;
-        }
-
-        @keyframes modalSlideIn {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            display: flex;
+            flex-direction: column;
         }
 
         .modal-header {
-            padding: 18px;
+            padding: 20px 30px;
             background: rgba(0, 0, 0, 0.3);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
         }
 
         .modal-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--cell-blue);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-green);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .modal-close {
             background: none;
             border: none;
             color: var(--text-secondary);
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             cursor: pointer;
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -651,1136 +333,645 @@
         }
 
         .modal-body {
-            padding: 18px;
+            padding: 30px;
             overflow-y: auto;
-            max-height: calc(85vh - 70px);
-        }
-
-        /* ========== GRÁFICO DENTRO DO MODAL ========== */
-        .modal-chart-container {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            padding: 15px;
-            margin: 15px 0;
-            border: 1px solid rgba(14, 165, 233, 0.2);
-        }
-
-        .chart-title {
-            color: var(--cell-blue);
-            margin-bottom: 12px;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .chart-container {
-            width: 100%;
-            height: 250px;
-            position: relative;
-        }
-
-        /* ========== BOTÕES DE AÇÃO ========== */
-        .chapter-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .action-btn {
-            padding: 10px 20px;
-            background: linear-gradient(45deg, var(--cell-blue), var(--membrane-purple));
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
             flex: 1;
-            min-width: 140px;
-            text-align: center;
-            display: flex;
+        }
+
+        /* ========== LOADING OVERLAY ========== */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 22, 0.95);
+            z-index: 3000;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            font-size: 0.9rem;
-        }
-
-        .action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 15px rgba(14, 165, 233, 0.3);
-        }
-
-        .action-btn.secondary {
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid var(--cell-blue);
-        }
-
-        .action-btn:active {
-            transform: translateY(0);
-        }
-
-        /* ========== FOOTER ========== */
-        .footer {
-            margin-top: 40px;
-            text-align: center;
-            color: var(--text-dim);
-            font-size: 0.85rem;
-            width: 100%;
-            padding: 15px 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .version-info {
-            font-family: 'Source Code Pro', monospace;
-            color: var(--membrane-purple);
-            font-size: 0.75rem;
-            margin-top: 8px;
-            letter-spacing: 0.8px;
-        }
-
-        /* ========== NOTIFICAÇÕES ========== */
-        .notification {
-            position: fixed;
-            bottom: 130px; /* Acima do dashboard fixo */
-            right: 20px;
-            background: rgba(30, 41, 59, 0.95);
-            border: 1px solid var(--cell-blue);
-            border-left: 4px solid var(--cell-blue);
-            border-radius: 8px;
-            padding: 12px 20px;
-            max-width: 320px;
-            transform: translateX(120%);
-            transition: transform 0.3s ease;
             backdrop-filter: blur(10px);
-            z-index: 10000;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
-        .notification.show {
-            transform: translateX(0);
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 5px solid rgba(16, 185, 129, 0.3);
+            border-top: 5px solid var(--primary-green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
         }
 
-        .notification.success {
-            border-left-color: var(--mitochondria-green);
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        .notification.error {
-            border-left-color: var(--nucleus-red);
+        .loading-text {
+            color: var(--primary-green);
+            font-size: 1.2rem;
+            font-weight: 600;
         }
 
-        .notification.warning {
-            border-left-color: var(--lysosome-yellow);
+        /* ========== SCROLLBAR ========== */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, var(--primary-green), var(--secondary-green));
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, var(--secondary-green), var(--dark-green));
         }
 
         /* ========== RESPONSIVIDADE ========== */
         @media (max-width: 768px) {
-            .hacker-container {
-                height: 50px;
-                margin: 80px auto 15px;
+            .main-content {
+                padding: 80px 15px 30px;
             }
-
-            .hacker-title {
-                font-size: 1.3rem;
+            
+            .intro-title {
+                font-size: 2rem;
             }
-
-            .hacker-text {
-                font-size: 0.8rem;
-            }
-
+            
             .section-title {
-                font-size: 1.3rem;
+                font-size: 1.6rem;
+                flex-direction: column;
+                gap: 10px;
             }
-
-            .topics-container {
-                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-                gap: 12px;
+            
+            .section-title::before,
+            .section-title::after {
+                display: none;
             }
-
+            
+            .topics-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 15px;
+            }
+            
             .topic-card {
-                width: 130px;
-                height: 130px;
-                padding: 15px 10px;
+                min-height: 140px;
+                padding: 20px 10px;
             }
-
+            
             .topic-icon {
                 font-size: 2rem;
             }
-
-            .dashboard-grid-compact {
-                grid-template-columns: repeat(2, 1fr);
+            
+            .modal-content {
+                width: 95%;
+                padding: 0;
             }
-
-            .progress-visual-compact {
-                max-height: 120px;
-            }
-
-            .progress-dot-compact {
-                width: 26px;
-                height: 26px;
-                font-size: 0.65rem;
-            }
-
+            
             .modal-header {
-                flex-direction: column;
-                text-align: center;
+                padding: 15px 20px;
             }
-
-            .chapter-actions {
-                flex-direction: column;
-            }
-
-            .action-btn {
-                min-width: 100%;
+            
+            .modal-body {
+                padding: 20px;
             }
         }
 
         @media (max-width: 480px) {
-            .hacker-title {
-                font-size: 1.1rem;
+            .header-title {
+                font-size: 1.2rem;
             }
-
-            .topics-container {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
+            
+            .header-btn {
+                width: 35px;
+                height: 35px;
             }
-
-            .topic-card {
-                width: 100%;
-                height: 120px;
-            }
-
-            .topic-icon {
+            
+            .intro-title {
                 font-size: 1.8rem;
             }
-
+            
+            .intro-btn {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+            
+            .topics-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            
+            .topic-card {
+                min-height: 120px;
+                padding: 15px 10px;
+            }
+            
+            .topic-icon {
+                font-size: 1.8rem;
+                margin-bottom: 10px;
+            }
+            
             .topic-title {
-                font-size: 0.8rem;
+                font-size: 0.85rem;
             }
-
-            .dashboard-fixed {
-                padding: 12px 15px;
-            }
-
-            .dashboard-title {
-                font-size: 0.9rem;
-            }
-
-            .stat-value-compact {
-                font-size: 1.1rem;
-            }
-
-            .progress-dot-compact {
-                width: 24px;
-                height: 24px;
-                font-size: 0.6rem;
-            }
-
-            .notification {
-                bottom: 120px;
-                right: 15px;
-                max-width: calc(100% - 30px);
-            }
-        }
-
-        /* ========== ANIMAÇÕES ========== */
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .slide-in {
-            animation: slideIn 0.5s ease forwards;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .pulse {
-            animation: pulse 2s infinite;
         }
     </style>
 </head>
 <body>
-    <!-- ========== FUNDO CELULAR ========== -->
-    <div class="cell-bg" id="cellBackground"></div>
+    <!-- ========== FUNDO ANIMADO ========== -->
+    <div class="animated-bg" id="animatedBg"></div>
+
+    <!-- ========== LOADING OVERLAY ========== -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text" id="loadingText">Carregando conteúdo...</div>
+    </div>
 
     <!-- ========== HEADER ========== -->
     <header class="main-header">
         <div class="header-left">
-            <div class="logo">BM</div>
-            <div class="header-title">BIOLOMEMO</div>
+            <div class="logo-icon">
+                <i class="fas fa-seedling"></i>
+            </div>
+            <div class="header-title">Palácio da Biologia</div>
         </div>
         <div class="header-right">
-            <button class="header-btn" onclick="toggleDashboard()" title="Alternar Dashboard">
-                <i class="fas fa-chart-line"></i>
+            <button class="header-btn" onclick="toggleSound()" title="Som">
+                <i class="fas fa-volume-up"></i>
             </button>
-            <button class="header-btn" onclick="resetAllProgress()" title="Resetar Progresso">
-                <i class="fas fa-redo"></i>
-            </button>
-            <button class="header-btn" onclick="exportProgress()" title="Exportar Dados">
-                <i class="fas fa-download"></i>
+            <button class="header-btn" onclick="showHelp()" title="Ajuda">
+                <i class="fas fa-question-circle"></i>
             </button>
         </div>
     </header>
 
-    <!-- ========== TEXTO HACKER ANIMADO ========== -->
-    <div class="hacker-container">
-        <div class="hacker-text" id="hackerText">
-            Sistema de estudos de Biologia • Explore os 41 tópicos • Sistema objetivo sem log • 
-            Versão 4.0 • Projeto piloto • By: Sr.71n3! • Otima ideia! • Otimo • Genial! • OK •
-            Processando dados celulares • Carregando organelas • Inicializando microscópio virtual •
-            Sistema ativo e operacional • Memorização garantida • Eficiência comprovada
-        </div>
-    </div>
-
-    <h1 class="hacker-title">SISTEMA DE ESTUDOS DE BIOLOGIA</h1>
-    <p class="hacker-subtitle">Explore os 41 tópicos organizados em 4 seções principais. Clique em qualquer tópico para acessar conteúdo detalhado, gráficos de progresso e ferramentas interativas.</p>
-    
-    <div class="signature">
-        <strong>By: Sr.71n3!</strong> | Projeto piloto, versão 4.0, sistema objetivo sem log
-    </div>
-
     <!-- ========== CONTEÚDO PRINCIPAL ========== -->
     <main class="main-content">
+        <div class="intro-section">
+            <h1 class="intro-title">Sistema de Estudos de Biologia</h1>
+            <p class="intro-subtitle">
+                Explore os 41 tópicos fundamentais da biologia organizados em 4 seções. 
+                Clique em qualquer tópico para acessar a página completa no GitHub Pages.
+            </p>
+            <button class="intro-btn" onclick="showAllTopicsModal()">
+                <i class="fas fa-list"></i>
+                Ver Todos os Tópicos
+            </button>
+        </div>
+
         <!-- Seção 1: Fundamentos da Vida -->
-        <section class="section">
+        <div class="section">
             <h2 class="section-title">Fundamentos da Vida</h2>
-            <div class="topics-container" id="topicsContainer1"></div>
-        </section>
-        
+            <div class="topics-grid" id="section1">
+                <!-- Tópicos 1-11 serão inseridos por JavaScript -->
+            </div>
+        </div>
+
         <!-- Seção 2: Diversidade Biológica -->
-        <section class="section">
+        <div class="section">
             <h2 class="section-title">Diversidade Biológica</h2>
-            <div class="topics-container" id="topicsContainer2"></div>
-        </section>
-        
+            <div class="topics-grid" id="section2">
+                <!-- Tópicos 12-25 serão inseridos por JavaScript -->
+            </div>
+        </div>
+
         <!-- Seção 3: Fisiologia e Sistemas -->
-        <section class="section">
+        <div class="section">
             <h2 class="section-title">Fisiologia e Sistemas</h2>
-            <div class="topics-container" id="topicsContainer3"></div>
-        </section>
-        
+            <div class="topics-grid" id="section3">
+                <!-- Tópicos 26-35 serão inseridos por JavaScript -->
+            </div>
+        </div>
+
         <!-- Seção 4: Ecologia e Evolução -->
-        <section class="section">
+        <div class="section">
             <h2 class="section-title">Ecologia e Evolução</h2>
-            <div class="topics-container" id="topicsContainer4"></div>
-        </section>
+            <div class="topics-grid" id="section4">
+                <!-- Tópicos 36-41 serão inseridos por JavaScript -->
+            </div>
+        </div>
     </main>
 
-    <!-- ========== DASHBOARD FIXO INFERIOR ========== -->
-    <div class="dashboard-fixed" id="dashboardFixed">
-        <div class="dashboard-toggle" onclick="toggleDashboardExpanded()">
-            <div class="dashboard-title">
-                <i class="fas fa-chart-pie"></i>
-                Progresso Geral
-            </div>
-            <div class="toggle-icon">
-                <i class="fas fa-chevron-up"></i>
-            </div>
-        </div>
-        
-        <div class="dashboard-grid-compact">
-            <div class="stat-card-compact">
-                <div class="stat-value-compact" id="totalProgress">0%</div>
-                <div class="stat-label-compact">Progresso</div>
-            </div>
-            <div class="stat-card-compact">
-                <div class="stat-value-compact" id="topicsStudied">0/41</div>
-                <div class="stat-label-compact">Estudados</div>
-            </div>
-            <div class="stat-card-compact">
-                <div class="stat-value-compact" id="totalTime">0h</div>
-                <div class="stat-label-compact">Tempo</div>
-            </div>
-            <div class="stat-card-compact">
-                <div class="stat-value-compact" id="quizScore">0%</div>
-                <div class="stat-label-compact">Quiz Média</div>
-            </div>
-        </div>
-
-        <div class="progress-visual-compact" id="progressVisual">
-            <!-- Pontos de progresso serão gerados por JavaScript -->
-        </div>
-    </div>
-
-    <!-- ========== MODAL DE TÓPICO ========== -->
-    <div class="modal" id="topicModal">
+    <!-- ========== MODAL APENAS PARA AJUDA ========== -->
+    <div class="modal-overlay" id="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title">
-                    <i class="fas fa-book"></i>
-                    <span id="modalTopicTitle">Carregando...</span>
-                </div>
-                <button class="modal-close" id="closeModal">&times;</button>
+                <h2 class="modal-title" id="modalTitle">
+                    <i class="fas fa-question-circle"></i>
+                    <span id="modalTitleText">Ajuda</span>
+                </h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
             </div>
             <div class="modal-body" id="modalBody">
-                <div class="modal-chart-container">
-                    <div class="chart-title">
-                        <i class="fas fa-chart-bar"></i>
-                        Progresso Detalhado
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="topicChart"></canvas>
-                    </div>
-                </div>
-                
-                <div id="topicContent">
-                    <!-- Conteúdo será carregado dinamicamente -->
-                </div>
-                
-                <div class="chapter-actions">
-                    <button class="action-btn" id="openChapterBtn">
-                        <i class="fas fa-external-link-alt"></i>
-                        Abrir Capítulo
-                    </button>
-                    <button class="action-btn secondary" id="markAsStudiedBtn">
-                        <i class="fas fa-check-circle"></i>
-                        Marcar como Estudado
-                    </button>
-                    <button class="action-btn secondary" id="resetProgressBtn">
-                        <i class="fas fa-redo"></i>
-                        Reiniciar Progresso
-                    </button>
-                </div>
+                <!-- Conteúdo do modal será inserido por JavaScript -->
             </div>
         </div>
     </div>
 
-    <!-- ========== NOTIFICAÇÃO ========== -->
-    <div class="notification" id="notification"></div>
-
-    <!-- ========== FOOTER ========== -->
-    <footer class="footer">
-        <p>BIOLOMEMO - Sistema de Organização de Estudos Baseado no Palácio da Memória</p>
-        <p class="version-info">VERSÃO 4.0 | PROJETO PILOTO | SISTEMA OBJETIVO SEM LOG | BY: SR.71N3</p>
-        <p style="margin-top: 8px; font-size: 0.75rem;">
-            <span style="color: var(--mitochondria-green);">● Estudado</span> | 
-            <span style="color: var(--cell-blue);">● Em Progresso</span> | 
-            <span style="color: var(--text-dim);">● Não Iniciado</span>
-        </p>
-    </footer>
-
     <script>
-        // ========== CONFIGURAÇÃO INICIAL ==========
-        let globalProgress = {
-            total: 0,
-            studied: 0,
-            inProgress: 0,
-            timeSpent: 0, // em minutos
-            quizAverage: 0
-        };
-
-        let currentTopic = null;
-        let topicChart = null;
-
-        const topicsData = [
+        // ========== DADOS ORIGINAIS ==========
+        const topics = [
             // Fundamentos da Vida (1-11)
-            { number: "1", title: "Origem da Vida", icon: "🌋", section: 1, chapter: "01.html" },
-            { number: "2", title: "Citologia", icon: "🔬", section: 1, chapter: "02.html" },
-            { number: "3", title: "Composição Celular", icon: "🧫", section: 1, chapter: "03.html" },
-            { number: "4", title: "Superfície Celular", icon: "🛡️", section: 1, chapter: "04.html" },
-            { number: "5", title: "Citoplasma", icon: "🌀", section: 1, chapter: "05.html" },
-            { number: "6", title: "Metabolismo Energético", icon: "⚡", section: 1, chapter: "06.html" },
-            { number: "7", title: "Núcleo e Síntese Proteica", icon: "🧬", section: 1, chapter: "07.html" },
-            { number: "8", title: "Divisões Celulares", icon: "🔄", section: 1, chapter: "08.html" },
-            { number: "9", title: "Reprodução", icon: "👨‍👩‍👧‍👦", section: 1, chapter: "09.html" },
-            { number: "10", title: "Desenvolvimento Embrionário", icon: "👶", section: 1, chapter: "10.html" },
-            { number: "11", title: "Histologia Animal", icon: "🔍", section: 1, chapter: "11.html" },
+            { number: "1", title: "Origem da Vida", icon: "🌋", section: 1 },
+            { number: "2", title: "Citologia", icon: "🔬", section: 1 },
+            { number: "3", title: "Composição Celular", icon: "🧫", section: 1 },
+            { number: "4", title: "Superfície Celular", icon: "🛡️", section: 1 },
+            { number: "5", title: "Citoplasma", icon: "🌀", section: 1 },
+            { number: "6", title: "Metabolismo Energético", icon: "⚡", section: 1 },
+            { number: "7", title: "Núcleo e Síntese Proteica", icon: "🧬", section: 1 },
+            { number: "8", title: "Divisões Celulares", icon: "🔄", section: 1 },
+            { number: "9", title: "Reprodução", icon: "👨‍👩‍👧‍👦", section: 1 },
+            { number: "10", title: "Desenvolvimento Embrionário", icon: "👶", section: 1 },
+            { number: "11", title: "Histologia Animal", icon: "🔍", section: 1 },
             
             // Diversidade Biológica (12-25)
-            { number: "12", title: "Evolução", icon: "🦖", section: 2, chapter: "12.html" },
-            { number: "13", title: "Vírus", icon: "🦠", section: 2, chapter: "13.html" },
-            { number: "14", title: "Monera", icon: "🦠", section: 2, chapter: "14.html" },
-            { number: "15", title: "Protista", icon: "🐙", section: 2, chapter: "15.html" },
-            { number: "16", title: "Fungi", icon: "🍄", section: 2, chapter: "16.html" },
-            { number: "17", title: "Plantae", icon: "🌿", section: 2, chapter: "17.html" },
-            { number: "18", title: "Morfologia Vegetal", icon: "🌱", section: 2, chapter: "18.html" },
-            { number: "19", title: "Fisiologia Vegetal", icon: "🌻", section: 2, chapter: "19.html" },
-            { number: "20", title: "Introdução aos Animais", icon: "🐾", section: 2, chapter: "20.html" },
-            { number: "21", title: "Platelmintos e Nematoda", icon: "🐛", section: 2, chapter: "21.html" },
-            { number: "22", title: "Mollusca e Anelida", icon: "🐌", section: 2, chapter: "22.html" },
-            { number: "23", title: "Arthropoda e Equinodermata", icon: "🦀", section: 2, chapter: "23.html" },
-            { number: "24", title: "Cordata 1", icon: "🐠", section: 2, chapter: "24.html" },
-            { number: "25", title: "Cordata 2", icon: "🐒", section: 2, chapter: "25.html" },
+            { number: "12", title: "Evolução", icon: "🦖", section: 2 },
+            { number: "13", title: "Vírus", icon: "🦠", section: 2 },
+            { number: "14", title: "Monera", icon: "🦠", section: 2 },
+            { number: "15", title: "Protista", icon: "🐙", section: 2 },
+            { number: "16", title: "Fungi", icon: "🍄", section: 2 },
+            { number: "17", title: "Plantae", icon: "🌿", section: 2 },
+            { number: "18", title: "Morfologia Vegetal", icon: "🌱", section: 2 },
+            { number: "19", title: "Fisiologia Vegetal", icon: "🌻", section: 2 },
+            { number: "20", title: "Introdução aos Animais", icon: "🐾", section: 2 },
+            { number: "21", title: "Platelmintos e Nematoda", icon: "🐛", section: 2 },
+            { number: "22", title: "Mollusca e Anelida", icon: "🐌", section: 2 },
+            { number: "23", title: "Arthropoda e Equinodermata", icon: "🦀", section: 2 },
+            { number: "24", title: "Cordata 1", icon: "🐠", section: 2 },
+            { number: "25", title: "Cordata 2", icon: "🐒", section: 2 },
             
             // Fisiologia e Sistemas (26-35)
-            { number: "26", title: "Sustentação, Digestão, Respiração", icon: "🫁", section: 3, chapter: "26.html" },
-            { number: "27", title: "Circulação, Defesa, Excreção", icon: "❤️", section: 3, chapter: "27.html" },
-            { number: "28", title: "Coordenação e Regulação", icon: "🧠", section: 3, chapter: "28.html" },
-            { number: "29", title: "Genética Clássica", icon: "🧬", section: 3, chapter: "29.html" },
-            { number: "30", title: "Primeira Lei de Mendel", icon: "🌱", section: 3, chapter: "30.html" },
-            { number: "31", title: "Segunda Lei de Mendel", icon: "🌾", section: 3, chapter: "31.html" },
-            { number: "32", title: "Ligação Gênica", icon: "🔗", section: 3, chapter: "32.html" },
-            { number: "33", title: "Mutação", icon: "⚡", section: 3, chapter: "33.html" },
-            { number: "34", title: "Cromossomos e Genes", icon: "🧬", section: 3, chapter: "34.html" },
-            { number: "35", title: "Biotecnologia", icon: "🧪", section: 3, chapter: "35.html" },
+            { number: "26", title: "Sustentação, Digestão, Respiração", icon: "🫁", section: 3 },
+            { number: "27", title: "Circulação, Defesa, Excreção", icon: "❤️", section: 3 },
+            { number: "28", title: "Coordenação e Regulação", icon: "🧠", section: 3 },
+            { number: "29", title: "Genética Clássica", icon: "🧬", section: 3 },
+            { number: "30", title: "Primeira Lei de Mendel", icon: "🌱", section: 3 },
+            { number: "31", title: "Segunda Lei de Mendel", icon: "🌾", section: 3 },
+            { number: "32", title: "Ligação Gênica", icon: "🔗", section: 3 },
+            { number: "33", title: "Mutação", icon: "⚡", section: 3 },
+            { number: "34", title: "Cromossomos e Genes", icon: "🧬", section: 3 },
+            { number: "35", title: "Biotecnologia", icon: "🧪", section: 3 },
             
             // Ecologia e Evolução (36-41)
-            { number: "36", title: "Teoria da Evolução", icon: "🦍", section: 4, chapter: "36.html" },
-            { number: "37", title: "Ecologia Populacional", icon: "👥", section: 4, chapter: "37.html" },
-            { number: "38", title: "Ecologia de Comunidades", icon: "🌳", section: 4, chapter: "38.html" },
-            { number: "39", title: "Relações Ecológicas", icon: "🤝", section: 4, chapter: "39.html" },
-            { number: "40", title: "Sucessão Ecológica", icon: "🔄", section: 4, chapter: "40.html" },
-            { number: "41", title: "Equilíbrio Ecológico", icon: "⚖️", section: 4, chapter: "41.html" }
+            { number: "36", title: "Teoria da Evolução", icon: "🦍", section: 4 },
+            { number: "37", title: "Ecologia Populacional", icon: "👥", section: 4 },
+            { number: "38", title: "Ecologia de Comunidades", icon: "🌳", section: 4 },
+            { number: "39", title: "Relações Ecológicas", icon: "🤝", section: 4 },
+            { number: "40", title: "Sucessão Ecológica", icon: "🔄", section: 4 },
+            { number: "41", title: "Equilíbrio Ecológico", icon: "⚖️", section: 4 }
         ];
+
+        // ========== URL BASE SIMPLIFICADA ==========
+        // Usa caminhos relativos para funcionar em qualquer configuração do GitHub Pages
+        const BASE_URL = './';  // Pasta atual onde está o index.html
+
+        // ========== VARIÁVEIS GLOBAIS ==========
+        let soundEnabled = true;
 
         // ========== INICIALIZAÇÃO ==========
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("🔬 BIOLOMEMO Sistema carregado!");
+            console.log("🌿 Palácio da Biologia inicializado!");
             
-            // Criar fundo celular
-            createCellBackground();
-            
-            // Carregar progresso salvo
-            loadAllProgress();
-            
-            // Renderizar tópicos
-            renderTopics();
-            
-            // Atualizar dashboard
-            updateDashboard();
-            
-            // Configurar event listeners
+            createAnimatedBackground();
+            renderTopicCards();
             setupEventListeners();
             
-            // Otimizar para mobile
-            optimizeForMobile();
-            
-            // Mostrar notificação inicial
-            setTimeout(() => {
-                showNotification('BIOLOMEMO v4.0 carregado! Explore os 41 tópicos.', 'success');
-            }, 1000);
+            // Detectar Kodular/WebView
+            if (/Kodular|WebView|Android.*AppleWebKit/.test(navigator.userAgent)) {
+                optimizeForMobile();
+            }
         });
 
-        // ========== FUNDO CELULAR ==========
-        function createCellBackground() {
-            const bg = document.getElementById('cellBackground');
-            if (!bg) return;
+        // ========== FUNDO ANIMADO ==========
+        function createAnimatedBackground() {
+            const bg = document.getElementById('animatedBg');
             
-            // Criar mitocôndrias
-            for (let i = 0; i < 6; i++) {
-                const mito = document.createElement('div');
-                mito.className = 'organelle mitochondria';
-                mito.style.left = `${Math.random() * 100}%`;
-                mito.style.top = `${Math.random() * 100}%`;
-                mito.style.animationDelay = `${Math.random() * 10}s`;
-                bg.appendChild(mito);
-            }
-            
-            // Criar ribossomos
-            for (let i = 0; i < 25; i++) {
-                const ribo = document.createElement('div');
-                ribo.className = 'organelle ribosome';
-                ribo.style.left = `${Math.random() * 100}%`;
-                ribo.style.top = `${Math.random() * 100}%`;
-                ribo.style.animationDelay = `${Math.random() * 5}s`;
-                bg.appendChild(ribo);
-            }
-            
-            // Criar vesículas
-            for (let i = 0; i < 10; i++) {
-                const vesicle = document.createElement('div');
-                vesicle.className = 'organelle vesicle';
-                vesicle.style.left = `${Math.random() * 100}%`;
-                vesicle.style.top = `${Math.random() * 100}%`;
-                vesicle.style.animationDelay = `${Math.random() * 8}s`;
-                bg.appendChild(vesicle);
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'floating-particle';
+                particle.style.width = particle.style.height = (10 + Math.random() * 40) + 'px';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 15) + 's';
+                bg.appendChild(particle);
             }
         }
 
-        // ========== RENDERIZAR TÓPICOS ==========
-        function renderTopics() {
-            const containers = [
-                document.getElementById('topicsContainer1'),
-                document.getElementById('topicsContainer2'),
-                document.getElementById('topicsContainer3'),
-                document.getElementById('topicsContainer4')
+        // ========== RENDERIZAR CARTÕES ==========
+        function renderTopicCards() {
+            const sections = [
+                document.getElementById('section1'),
+                document.getElementById('section2'),
+                document.getElementById('section3'),
+                document.getElementById('section4')
             ];
             
-            // Limpar containers
-            containers.forEach(container => {
-                if (container) container.innerHTML = '';
-            });
+            sections.forEach(section => section.innerHTML = '');
             
-            // Renderizar cada tópico
-            topicsData.forEach(topic => {
-                const progress = getTopicProgress(topic.number);
-                const card = createTopicCard(topic, progress);
+            topics.forEach(topic => {
+                const card = document.createElement('a');
+                card.className = 'topic-card';
+                card.dataset.topicNumber = topic.number;
                 
-                if (topic.section >= 1 && topic.section <= 4 && containers[topic.section - 1]) {
-                    containers[topic.section - 1].appendChild(card);
-                }
-            });
-            
-            // Atualizar visualização de progresso
-            updateProgressVisual();
-        }
-
-        function createTopicCard(topic, progress) {
-            const card = document.createElement('div');
-            card.className = 'topic-card';
-            card.dataset.topicNumber = topic.number;
-            
-            // Calcular percentual
-            const percent = calculateProgressPercent(progress);
-            
-            // Determinar classe de status
-            let statusClass = '';
-            if (percent >= 100) statusClass = 'studied';
-            else if (percent > 0) statusClass = 'in-progress';
-            
-            card.innerHTML = `
-                <div class="topic-number">${topic.number}</div>
+                card.innerHTML = `
+                    <div class="topic-number">${topic.number}</div>
+                    <div class="topic-icon">${topic.icon}</div>
+                    <div class="topic-title">${topic.title}</div>
+                `;
                 
-                <div class="progress-indicator">
-                    <svg class="progress-circle" viewBox="0 0 36 36">
-                        <path class="progress-circle-bg" d="M18 2.0845
-                            a 15.9155 15.9155 0 0 1 0 31.831
-                            a 15.9155 15.9155 0 0 1 0 -31.831"/>
-                        <path class="progress-circle-fill" 
-                            stroke-dasharray="${percent}, 100"
-                            d="M18 2.0845
-                            a 15.9155 15.9155 0 0 1 0 31.831
-                            a 15.9155 15.9155 0 0 1 0 -31.831"/>
-                    </svg>
-                    <div class="progress-percent">${percent}%</div>
-                </div>
-                
-                <div class="topic-icon">${topic.icon}</div>
-                <div class="topic-title">${topic.title}</div>
-            `;
-            
-            // Adicionar classe de status ao card
-            if (statusClass) {
-                card.classList.add(statusClass);
-            }
-            
-            // Event listener para abrir modal
-            card.addEventListener('click', (e) => {
-                e.stopPropagation();
-                openTopicModal(topic);
-            });
-            
-            return card;
-        }
-
-        // ========== SISTEMA DE PROGRESSO ==========
-        function loadAllProgress() {
-            globalProgress = {
-                total: 0,
-                studied: 0,
-                inProgress: 0,
-                timeSpent: 0,
-                quizAverage: 0
-            };
-            
-            let totalQuizScore = 0;
-            let quizCount = 0;
-            
-            // Carregar progresso de cada capítulo do localStorage
-            topicsData.forEach(topic => {
-                const saved = localStorage.getItem(`biolomemo_chapter${topic.number.padStart(2, '0')}`);
-                if (saved) {
-                    try {
-                        const progress = JSON.parse(saved);
-                        
-                        // Calcular progresso geral
-                        if (progress.completed) {
-                            globalProgress.studied++;
-                        } else if (progress.quiz && progress.quiz.score > 0) {
-                            globalProgress.inProgress++;
-                        }
-                        
-                        // Somar tempo
-                        if (progress.studyTime) {
-                            globalProgress.timeSpent += progress.studyTime;
-                        }
-                        
-                        // Calcular média de quizzes
-                        if (progress.quiz && progress.quiz.score > 0) {
-                            totalQuizScore += progress.quiz.score;
-                            quizCount++;
-                        }
-                    } catch (e) {
-                        console.error(`Erro ao carregar progresso do capítulo ${topic.number}:`, e);
-                    }
-                }
-            });
-            
-            // Calcular progresso total
-            globalProgress.total = Math.round((globalProgress.studied / topicsData.length) * 100);
-            
-            // Calcular média dos quizzes
-            if (quizCount > 0) {
-                globalProgress.quizAverage = Math.round(totalQuizScore / quizCount);
-            }
-        }
-
-        function getTopicProgress(topicNumber) {
-            const saved = localStorage.getItem(`biolomemo_chapter${topicNumber.padStart(2, '0')}`);
-            if (saved) {
-                try {
-                    return JSON.parse(saved);
-                } catch (e) {
-                    return { completed: false, quiz: { score: 0 } };
-                }
-            }
-            return { completed: false, quiz: { score: 0 } };
-        }
-
-        function calculateProgressPercent(progress) {
-            if (progress.completed) return 100;
-            if (progress.quiz && progress.quiz.score > 0) {
-                return Math.min(progress.quiz.score, 99);
-            }
-            return 0;
-        }
-
-        function updateTopicProgress(topicNumber, progressData) {
-            const current = getTopicProgress(topicNumber);
-            const updated = { 
-                ...current, 
-                ...progressData, 
-                lastUpdated: new Date().toISOString() 
-            };
-            
-            localStorage.setItem(`biolomemo_chapter${topicNumber.padStart(2, '0')}`, JSON.stringify(updated));
-            
-            // Recarregar e atualizar interface
-            loadAllProgress();
-            updateDashboard();
-            renderTopics();
-        }
-
-        // ========== DASHBOARD FIXO ==========
-        function toggleDashboard() {
-            const dashboard = document.getElementById('dashboardFixed');
-            if (!dashboard) return;
-            
-            // Alternar visibilidade do dashboard
-            if (dashboard.style.display === 'none') {
-                dashboard.style.display = 'block';
-                updateDashboard();
-                showNotification('Dashboard ativado', 'info');
-            } else {
-                dashboard.style.display = 'none';
-                showNotification('Dashboard desativado', 'info');
-            }
-        }
-
-        function toggleDashboardExpanded() {
-            const dashboard = document.getElementById('dashboardFixed');
-            if (dashboard) {
-                dashboard.classList.toggle('expanded');
-            }
-        }
-
-        function updateDashboard() {
-            // Atualizar estatísticas
-            const totalProgressElem = document.getElementById('totalProgress');
-            const topicsStudiedElem = document.getElementById('topicsStudied');
-            const totalTimeElem = document.getElementById('totalTime');
-            const quizScoreElem = document.getElementById('quizScore');
-            
-            if (totalProgressElem) totalProgressElem.textContent = `${globalProgress.total}%`;
-            if (topicsStudiedElem) topicsStudiedElem.textContent = `${globalProgress.studied}/${topicsData.length}`;
-            if (totalTimeElem) totalTimeElem.textContent = `${Math.round(globalProgress.timeSpent / 60)}h`;
-            if (quizScoreElem) quizScoreElem.textContent = `${globalProgress.quizAverage}%`;
-        }
-
-        function updateProgressVisual() {
-            const container = document.getElementById('progressVisual');
-            if (!container) return;
-            
-            container.innerHTML = '';
-            
-            topicsData.forEach(topic => {
-                const progress = getTopicProgress(topic.number);
-                const percent = calculateProgressPercent(progress);
-                
-                const dot = document.createElement('div');
-                dot.className = 'progress-dot-compact';
-                dot.textContent = topic.number;
-                dot.dataset.title = `${topic.number}. ${topic.title} - ${percent}%`;
-                
-                if (percent >= 100) {
-                    dot.classList.add('studied');
-                } else if (percent > 0) {
-                    dot.classList.add('in-progress');
-                }
-                
-                dot.addEventListener('click', () => {
-                    const topicObj = topicsData.find(t => t.number === topic.number);
-                    if (topicObj) openTopicModal(topicObj);
-                });
-                
-                container.appendChild(dot);
-            });
-        }
-
-        // ========== MODAL DE TÓPICO ==========
-        function openTopicModal(topic) {
-            try {
-                currentTopic = topic;
-                
-                // Atualizar título
-                const modalTitle = document.getElementById('modalTopicTitle');
-                if (modalTitle) {
-                    modalTitle.textContent = `${topic.number} - ${topic.title}`;
-                }
-                
-                // Atualizar conteúdo
-                const content = document.getElementById('topicContent');
-                if (content) {
-                    content.innerHTML = `
-                        <div style="text-align: center; margin-bottom: 15px;">
-                            <div style="font-size: 3.5rem; margin-bottom: 8px;">${topic.icon}</div>
-                            <h3 style="color: var(--cell-blue); margin-bottom: 8px;">${topic.title}</h3>
-                            <p style="color: var(--text-secondary);">Capítulo ${topic.number} de 41</p>
-                        </div>
-                        
-                        <div style="background: rgba(0, 0, 0, 0.2); padding: 12px; border-radius: 8px; margin: 15px 0;">
-                            <h4 style="color: var(--cell-blue); margin-bottom: 8px;">
-                                <i class="fas fa-info-circle"></i> Informações do Capítulo
-                            </h4>
-                            <p style="color: var(--text-secondary); line-height: 1.5; font-size: 0.9rem;">
-                                Este capítulo aborda os principais conceitos de <strong>${topic.title.toLowerCase()}</strong>. 
-                                Utilize as ferramentas interativas para maximizar sua memorização.
-                            </p>
-                        </div>
-                    `;
-                }
-                
-                // Atualizar botões de ação
-                const openBtn = document.getElementById('openChapterBtn');
-                const markBtn = document.getElementById('markAsStudiedBtn');
-                const resetBtn = document.getElementById('resetProgressBtn');
-                
-                if (openBtn) {
-                    openBtn.onclick = () => openChapter(topic);
-                }
-                
-                if (markBtn) {
-                    markBtn.onclick = () => markAsStudied(topic);
-                }
-                
-                if (resetBtn) {
-                    resetBtn.onclick = () => resetTopicProgress(topic);
-                }
-                
-                // Atualizar gráfico do tópico
-                updateTopicChart(topic.number);
-                
-                // Mostrar modal
-                const modal = document.getElementById('topicModal');
-                if (modal) {
-                    modal.classList.add('active');
-                }
-                
-            } catch (error) {
-                console.error('Erro ao abrir modal:', error);
-                showNotification('Erro ao abrir o tópico', 'error');
-            }
-        }
-
-        function updateTopicChart(topicNumber) {
-            try {
-                const progress = getTopicProgress(topicNumber);
-                const canvas = document.getElementById('topicChart');
-                
-                if (!canvas) {
-                    console.error('Canvas do gráfico não encontrado');
-                    return;
-                }
-                
-                const ctx = canvas.getContext('2d');
-                
-                // Destruir gráfico anterior se existir
-                if (topicChart) {
-                    topicChart.destroy();
-                }
-                
-                const percent = calculateProgressPercent(progress);
-                const remaining = 100 - percent;
-                
-                topicChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Concluído', 'Restante'],
-                        datasets: [{
-                            data: [percent, remaining],
-                            backgroundColor: [
-                                'rgba(16, 185, 129, 0.8)',
-                                'rgba(255, 255, 255, 0.1)'
-                            ],
-                            borderColor: [
-                                'rgba(16, 185, 129, 1)',
-                                'rgba(255, 255, 255, 0.3)'
-                            ],
-                            borderWidth: 2
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        cutout: '70%',
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: {
-                                    color: 'rgba(255, 255, 255, 0.8)',
-                                    padding: 15,
-                                    font: {
-                                        size: 11
-                                    }
-                                }
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return `${context.label}: ${context.raw}%`;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-                
-            } catch (error) {
-                console.error('Erro ao criar gráfico:', error);
-            }
-        }
-
-        function markAsStudied(topic) {
-            if (!topic) topic = currentTopic;
-            if (!topic) return;
-            
-            if (confirm(`Marcar "${topic.title}" como completamente estudado?`)) {
-                updateTopicProgress(topic.number, {
-                    completed: true,
-                    quiz: { score: 100 },
-                    markedAsStudied: true,
-                    studyTime: 60,
-                    lastStudied: new Date().toISOString()
-                });
-                
-                showNotification(`Capítulo ${topic.number} marcado como estudado!`, 'success');
-                
-                // Atualizar gráfico no modal
-                if (currentTopic && currentTopic.number === topic.number) {
-                    updateTopicChart(topic.number);
-                }
-            }
-        }
-
-        function resetTopicProgress(topic) {
-            if (!topic) topic = currentTopic;
-            if (!topic) return;
-            
-            if (confirm(`Reiniciar todo o progresso do capítulo ${topic.number}?`)) {
-                localStorage.removeItem(`biolomemo_chapter${topic.number.padStart(2, '0')}`);
-                
-                showNotification(`Progresso do capítulo ${topic.number} resetado!`, 'info');
-                
-                // Recarregar tudo
-                loadAllProgress();
-                updateDashboard();
-                renderTopics();
-                
-                // Atualizar gráfico no modal
-                if (currentTopic && currentTopic.number === topic.number) {
-                    updateTopicChart(topic.number);
-                }
-            }
-        }
-
-        function openChapter(topic) {
-            if (!topic && currentTopic) topic = currentTopic;
-            if (!topic) return;
-            
-            // Fechar modal
-            const modal = document.getElementById('topicModal');
-            if (modal) {
-                modal.classList.remove('active');
-            }
-            
-            // Registrar acesso
-            updateTopicProgress(topic.number, {
-                lastAccessed: new Date().toISOString(),
-                accessCount: (getTopicProgress(topic.number).accessCount || 0) + 1
-            });
-            
-            // Redirecionar para o capítulo
-            setTimeout(() => {
-                window.location.href = topic.chapter;
-            }, 300);
-        }
-
-        // ========== FUNÇÕES UTILITÁRIAS ==========
-        function resetAllProgress() {
-            if (confirm('Tem certeza que deseja resetar TODO o progresso de TODOS os capítulos?')) {
-                // Remover todos os dados de progresso
-                for (let i = 1; i <= 41; i++) {
-                    localStorage.removeItem(`biolomemo_chapter${i.toString().padStart(2, '0')}`);
-                }
-                
-                // Resetar variáveis globais
-                globalProgress = {
-                    total: 0,
-                    studied: 0,
-                    inProgress: 0,
-                    timeSpent: 0,
-                    quizAverage: 0
+                // Configuração do link
+                const topicUrl = getTopicUrl(topic.number);
+                card.href = topicUrl;
+                card.onclick = (e) => {
+                    e.preventDefault();
+                    navigateToTopic(topic);
                 };
                 
-                // Recarregar interface
-                loadAllProgress();
-                updateDashboard();
-                renderTopics();
-                
-                showNotification('Todo o progresso foi resetado!', 'info');
-            }
+                if (topic.section >= 1 && topic.section <= 4) {
+                    sections[topic.section - 1].appendChild(card);
+                }
+            });
         }
 
-        function exportProgress() {
-            const exportData = {
-                system: 'BIOLOMEMO',
-                version: '4.0',
-                exportDate: new Date().toISOString(),
-                globalProgress: globalProgress,
-                topics: []
-            };
+        // ========== NAVEGAÇÃO PARA TÓPICOS ==========
+        function getTopicUrl(topicNumber) {
+            const formattedNumber = topicNumber.padStart(2, '0');
+            return `${BASE_URL}topico-${formattedNumber}/`;
+        }
+
+        function navigateToTopic(topic) {
+            showLoading(`Abrindo ${topic.title}...`);
             
-            // Coletar dados de cada tópico
-            topicsData.forEach(topic => {
-                const progress = getTopicProgress(topic.number);
-                exportData.topics.push({
-                    number: topic.number,
-                    title: topic.title,
-                    progress: progress
+            const topicUrl = getTopicUrl(topic.number);
+            
+            // Verificar se a página existe
+            fetch(topicUrl, { method: 'HEAD' })
+                .then(response => {
+                    if (response.ok) {
+                        setTimeout(() => {
+                            hideLoading();
+                            window.location.href = topicUrl;
+                        }, 800);
+                    } else {
+                        throw new Error('Página não encontrada');
+                    }
+                })
+                .catch(error => {
+                    hideLoading();
+                    showNotification(`⚠️ Página ainda não criada: ${topic.title}`, 'warning');
+                    console.log(`Crie a página em: ${topicUrl}`);
+                    
+                    setTimeout(() => {
+                        if (confirm(`A página para "${topic.title}" ainda não foi criada.\n\nDeseja ver a estrutura sugerida?`)) {
+                            showPageStructure(topic);
+                        }
+                    }, 500);
                 });
+        }
+
+        // ========== LOADING ==========
+        function showLoading(message = "Carregando conteúdo...") {
+            const overlay = document.getElementById('loadingOverlay');
+            const text = document.getElementById('loadingText');
+            
+            text.textContent = message;
+            overlay.style.display = 'flex';
+        }
+
+        function hideLoading() {
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.style.display = 'none';
+        }
+
+        // ========== MODAL DE AJUDA ==========
+        function showHelp() {
+            const modalTitle = document.getElementById('modalTitleText');
+            const modalBody = document.getElementById('modalBody');
+            
+            modalTitle.textContent = 'Ajuda';
+            
+            const content = `
+                <div style="max-width: 600px; margin: 0 auto;">
+                    <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 25px; margin-bottom: 20px;">
+                        <h3 style="color: var(--primary-green); margin-bottom: 15px;">📚 Como usar o Palácio da Biologia</h3>
+                        <ul style="color: var(--text-secondary); padding-left: 20px; line-height: 1.6;">
+                            <li><strong>Clique em qualquer tópico</strong> para abrir sua página completa no GitHub Pages</li>
+                            <li>Cada tópico tem sua própria URL exclusiva</li>
+                            <li>Use o botão "Ver Todos os Tópicos" para uma visão geral</li>
+                            <li>Seu progresso é salvo automaticamente no navegador</li>
+                            <li>Pode usar em qualquer dispositivo</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 25px; margin-bottom: 20px;">
+                        <h3 style="color: var(--primary-green); margin-bottom: 15px;">🔗 Estrutura do Projeto</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 10px;">
+                            Cada tópico está em uma pasta separada:
+                        </p>
+                        <code style="display: block; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; margin-bottom: 15px; color: var(--light-green);">
+                            /topico-01/<br>
+                            /topico-02/<br>
+                            ...<br>
+                            /topico-41/
+                        </code>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                            O sistema automaticamente busca as pastas no mesmo diretório do index.html
+                        </p>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 25px;">
+                        <h3 style="color: var(--primary-green); margin-bottom: 15px;">🎯 Dicas de Estudo</h3>
+                        <ul style="color: var(--text-secondary); padding-left: 20px; line-height: 1.6;">
+                            <li>Estude um tópico por dia</li>
+                            <li>Faça anotações enquanto estuda</li>
+                            <li>Revise os tópicos anteriores toda semana</li>
+                            <li>Complete os quizzes para fixar o conteúdo</li>
+                            <li>Associe imagens aos conceitos</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+            
+            modalBody.innerHTML = content;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function showAllTopicsModal() {
+            const modalTitle = document.getElementById('modalTitleText');
+            const modalBody = document.getElementById('modalBody');
+            
+            modalTitle.textContent = 'Todos os Tópicos';
+            
+            let content = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <p style="color: var(--text-secondary); font-size: 1.1rem;">
+                        Clique em qualquer tópico para acessar a página completa
+                    </p>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; max-height: 60vh; overflow-y: auto; padding: 10px;">
+            `;
+            
+            topics.forEach(topic => {
+                const topicUrl = getTopicUrl(topic.number);
+                content += `
+                    <a href="${topicUrl}" class="topic-card" style="min-height: 80px; flex-direction: row; justify-content: flex-start; gap: 15px; text-align: left;" onclick="event.preventDefault(); navigateToTopic(${JSON.stringify(topic)})">
+                        <div style="font-size: 1.8rem;">${topic.icon}</div>
+                        <div>
+                            <div style="font-weight: bold; color: var(--primary-green);">${topic.number}.</div>
+                            <div style="color: var(--text-primary); font-size: 0.95rem;">${topic.title}</div>
+                        </div>
+                    </a>
+                `;
             });
             
-            // Criar e baixar arquivo
-            const dataStr = JSON.stringify(exportData, null, 2);
-            const dataBlob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(dataBlob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `biolomemo_progress_${new Date().toISOString().slice(0,10)}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            content += '</div>';
+            modalBody.innerHTML = content;
             
-            showNotification('Dados de progresso exportados com sucesso!', 'success');
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // ========== FUNÇÕES ADICIONAIS ==========
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const btn = document.querySelector('.header-btn:nth-child(1) i');
+            btn.className = soundEnabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
+            
+            showNotification(soundEnabled ? '🔊 Som ativado' : '🔇 Som desativado');
         }
 
         function showNotification(message, type = 'info') {
-            const notification = document.getElementById('notification');
-            if (!notification) return;
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                background: ${type === 'warning' ? 'rgba(245, 158, 11, 0.9)' : 'rgba(16, 185, 129, 0.9)'};
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                z-index: 10000;
+                font-weight: 600;
+                backdrop-filter: blur(10px);
+                border: 1px solid ${type === 'warning' ? '#f59e0b' : 'var(--primary-green)'};
+                transform: translateX(120%);
+                transition: transform 0.3s ease;
+                max-width: 300px;
+                word-wrap: break-word;
+            `;
             
-            // Resetar classes
-            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
             
-            // Adicionar classe de tipo
-            notification.classList.add(type);
-            
-            // Adicionar ícone
-            let icon = 'ℹ️';
-            if (type === 'success') icon = '✅';
-            else if (type === 'error') icon = '❌';
-            else if (type === 'warning') icon = '⚠️';
-            
-            notification.innerHTML = `${icon} ${message}`;
-            notification.classList.add('show');
-            
-            // Remover após 4 segundos
             setTimeout(() => {
-                notification.classList.remove('show');
-            }, 4000);
+                notification.style.transform = 'translateX(0)';
+            }, 10);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(120%)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        function showPageStructure(topic) {
+            const modalTitle = document.getElementById('modalTitleText');
+            const modalBody = document.getElementById('modalBody');
+            
+            modalTitle.textContent = `Estrutura para: ${topic.title}`;
+            
+            const content = `
+                <div style="max-width: 600px; margin: 0 auto;">
+                    <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 25px; margin-bottom: 20px;">
+                        <h3 style="color: var(--primary-green); margin-bottom: 15px;">📁 Estrutura da Pasta:</h3>
+                        <code style="display: block; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-bottom: 15px; color: var(--light-green); font-family: 'Source Code Pro', monospace; white-space: pre-wrap;">
+/ (diretório raiz)
+├── index.html (esta página)
+└── /topico-${topic.number.padStart(2, '0')}/
+    ├── index.html (página principal do tópico)
+    ├── estilo.css
+    ├── script.js
+    └── /quizzes/ (pasta opcional)
+</code>
+                        
+                        <p style="color: var(--text-secondary); margin-top: 15px;">
+                            <strong>URL do tópico:</strong><br>
+                            <code style="color: var(--light-green);">${getTopicUrl(topic.number)}</code>
+                        </p>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 25px;">
+                        <h3 style="color: var(--primary-green); margin-bottom: 15px;">📝 Conteúdo sugerido:</h3>
+                        <ul style="color: var(--text-secondary); padding-left: 20px; line-height: 1.6;">
+                            <li>Explicação teórica resumida</li>
+                            <li>Imagens e diagramas</li>
+                            <li>Exemplos práticos</li>
+                            <li>Quiz de fixação (5-10 perguntas)</li>
+                            <li>Links para material complementar</li>
+                            <li>Exercícios resolvidos</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+            
+            modalBody.innerHTML = content;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function setupEventListeners() {
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                    hideLoading();
+                }
+            });
+            
+            document.getElementById('modal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('modal')) {
+                    closeModal();
+                }
+            });
         }
 
         function optimizeForMobile() {
-            // Aumentar áreas de toque
-            document.querySelectorAll('button, .topic-card, .progress-dot-compact, .action-btn, .dashboard-toggle').forEach(el => {
+            console.log('📱 Aplicando otimizações para dispositivos móveis...');
+            
+            document.querySelectorAll('a, button, .topic-card').forEach(el => {
                 el.style.minHeight = '44px';
-                el.style.minWidth = '44px';
             });
             
-            // Configurar scroll suave
             document.documentElement.style.cssText += `
                 -webkit-overflow-scrolling: touch;
                 overscroll-behavior: none;
                 touch-action: manipulation;
             `;
-            
-            // Detectar Kodular/WebView
-            if (/Kodular|WebView|Android.*AppleWebKit/.test(navigator.userAgent)) {
-                console.log('📱 Modo mobile otimizado ativado');
-                
-                // Forçar fullscreen se disponível
-                setTimeout(() => {
-                    if (document.documentElement.requestFullscreen) {
-                        document.documentElement.requestFullscreen().catch(console.log);
-                    }
-                }, 1000);
-            }
         }
 
-        function setupEventListeners() {
-            // Fechar modal
-            const closeBtn = document.getElementById('closeModal');
-            if (closeBtn) {
-                closeBtn.addEventListener('click', () => {
-                    const modal = document.getElementById('topicModal');
-                    if (modal) {
-                        modal.classList.remove('active');
-                    }
-                });
-            }
+        // ========== INICIALIZAR APÓS CARREGAMENTO ==========
+        window.onload = function() {
+            setTimeout(() => {
+                showNotification('🏛️ Bem-vindo ao Palácio da Biologia!');
+            }, 1000);
             
-            // Fechar modal ao clicar fora
-            const modal = document.getElementById('topicModal');
-            if (modal) {
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) {
-                        modal.classList.remove('active');
-                    }
-                });
-            }
-            
-            // Atalhos de teclado
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    const modal = document.getElementById('topicModal');
-                    if (modal) {
-                        modal.classList.remove('active');
-                    }
+            setTimeout(() => {
+                if (!localStorage.getItem('firstVisit')) {
+                    showHelp();
+                    localStorage.setItem('firstVisit', 'true');
                 }
-                
-                // Ctrl+E para exportar
-                if (e.ctrlKey && e.key === 'e') {
-                    e.preventDefault();
-                    exportProgress();
-                }
-                
-                // Ctrl+R para resetar
-                if (e.ctrlKey && e.key === 'r') {
-                    e.preventDefault();
-                    resetAllProgress();
-                }
-                
-                // Espaço para alternar dashboard
-                if (e.key === ' ' && !e.target.matches('input, textarea')) {
-                    e.preventDefault();
-                    toggleDashboardExpanded();
-                }
-            });
-        }
+            }, 2000);
+        };
     </script>
 </body>
 </html>
