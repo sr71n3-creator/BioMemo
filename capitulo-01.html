@@ -1,0 +1,2077 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Capítulo 01 • Origem da Vida - BIOLOMEMO</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;900&family=Source+Code+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js para visualizações -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Three.js para elementos 3D leves -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <style>
+        /* ========== VARIÁVEIS E RESET ========== */
+        :root {
+            --volcano-orange: #f97316;
+            --ocean-blue: #0ea5e9;
+            --primordial-green: #10b981;
+            --lava-red: #dc2626;
+            --amber-yellow: #f59e0b;
+            --deep-space: #0a0a16;
+            --rock-gray: #1e293b;
+            --crystal-purple: #8b5cf6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        body {
+            background: var(--deep-space);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ========== FUNDO PRIMORDIAL ========== */
+        .primordial-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(249, 115, 22, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(14, 165, 233, 0.08) 0%, transparent 40%),
+                linear-gradient(135deg, #0a0a16 0%, #1a1a2e 100%);
+            overflow: hidden;
+        }
+
+        .lava-flow {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to top, transparent, rgba(220, 38, 38, 0.1));
+            animation: lavaPulse 10s infinite alternate;
+        }
+
+        @keyframes lavaPulse {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.7; }
+        }
+
+        .bubble {
+            position: absolute;
+            background: radial-gradient(circle, var(--ocean-blue), transparent);
+            border-radius: 50%;
+            animation: floatUp 20s infinite linear;
+        }
+
+        @keyframes floatUp {
+            0% { 
+                transform: translateY(100vh) scale(0.5);
+                opacity: 0;
+            }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { 
+                transform: translateY(-100px) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* ========== HEADER PRIMORDIAL ========== */
+        .chapter-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 10, 22, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(249, 115, 22, 0.3);
+            z-index: 1000;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-btn {
+            background: rgba(249, 115, 22, 0.1);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            color: var(--volcano-orange);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .back-btn:hover {
+            background: rgba(249, 115, 22, 0.2);
+            transform: translateX(-2px);
+        }
+
+        .chapter-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chapter-number {
+            font-size: 0.9rem;
+            color: var(--volcano-orange);
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+
+        .chapter-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--volcano-orange), var(--ocean-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .nav-btn:hover {
+            color: var(--volcano-orange);
+            border-color: var(--volcano-orange);
+            transform: translateY(-2px);
+        }
+
+        /* ========== CONTEÚDO PRINCIPAL ========== */
+        .main-content {
+            padding: 100px 20px 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ========== TIMELINE INTERATIVA ========== */
+        .timeline-section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--volcano-orange);
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .section-title::before,
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--volcano-orange), transparent);
+        }
+
+        .timeline-container {
+            position: relative;
+            padding: 40px 0;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--volcano-orange), var(--ocean-blue));
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            width: 45%;
+            margin-bottom: 50px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 55%;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: var(--ocean-blue);
+            border: 3px solid white;
+            border-radius: 50%;
+            top: 20px;
+            right: -12px;
+            z-index: 2;
+        }
+
+        .timeline-item:nth-child(even) .timeline-dot {
+            left: -12px;
+            right: auto;
+        }
+
+        .timeline-content {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            border-color: var(--volcano-orange);
+            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.2);
+        }
+
+        .timeline-year {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--volcano-orange);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .timeline-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .timeline-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        /* ========== SIMULADOR MILLER-UREY ========== */
+        .simulator-section {
+            background: rgba(30, 41, 59, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 60px;
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .simulator-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .simulator-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--ocean-blue);
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+        }
+
+        .control-btn {
+            padding: 10px 20px;
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid var(--ocean-blue);
+            border-radius: 8px;
+            color: var(--ocean-blue);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .control-btn:hover {
+            background: rgba(14, 165, 233, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .simulator-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .simulator-body {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .simulation-canvas {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .simulation-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+        }
+
+        .control-value {
+            color: var(--ocean-blue);
+            font-weight: 700;
+        }
+
+        .slider-container {
+            position: relative;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--ocean-blue);
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid white;
+        }
+
+        .simulation-results {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--primordial-green);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .results-title {
+            color: var(--primordial-green);
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .result-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primordial-green);
+            margin-bottom: 5px;
+        }
+
+        .result-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* ========== CONSTRUTOR DE MOLÉCULAS ========== */
+        .molecule-builder {
+            background: rgba(30, 41, 59, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 60px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .builder-area {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 1024px) {
+            .builder-area {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .atom-palette {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .atom {
+            aspect-ratio: 1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            font-weight: bold;
+            color: white;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .atom:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .construction-zone {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            min-height: 400px;
+            position: relative;
+            overflow: hidden;
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .molecule-info {
+            background: rgba(30, 41, 59, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        /* ========== TEORIAS COMPARATIVAS ========== */
+        .theories-section {
+            margin-bottom: 60px;
+        }
+
+        .theories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .theory-card {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .theory-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--amber-yellow);
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.2);
+        }
+
+        .theory-card.active {
+            border-color: var(--amber-yellow);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .theory-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--amber-yellow);
+        }
+
+        .theory-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .theory-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .theory-pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .pros, .cons {
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .pros {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--primordial-green);
+        }
+
+        .cons {
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid var(--lava-red);
+        }
+
+        .pros-title, .cons-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pros-title {
+            color: var(--primordial-green);
+        }
+
+        .cons-title {
+            color: var(--lava-red);
+        }
+
+        /* ========== QUIZ INTERATIVO ========== */
+        .quiz-section {
+            background: rgba(30, 41, 59, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 60px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .quiz-progress {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--ocean-blue), var(--crystal-purple));
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .question-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 25px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .option.selected {
+            background: rgba(14, 165, 233, 0.2);
+            border-color: var(--ocean-blue);
+        }
+
+        .option.correct {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--primordial-green);
+        }
+
+        .option.incorrect {
+            background: rgba(220, 38, 38, 0.2);
+            border-color: var(--lava-red);
+        }
+
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .nav-btn-large {
+            padding: 12px 30px;
+            background: linear-gradient(45deg, var(--ocean-blue), var(--crystal-purple));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn-large:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3);
+        }
+
+        /* ========== GLOSSÁRIO FLUTUANTE ========== */
+        .glossary-term {
+            color: var(--ocean-blue);
+            border-bottom: 2px dotted var(--ocean-blue);
+            cursor: help;
+            position: relative;
+        }
+
+        .glossary-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid var(--ocean-blue);
+            border-radius: 10px;
+            padding: 15px;
+            width: 300px;
+            z-index: 10000;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .glossary-term:hover .glossary-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-5px);
+        }
+
+        .tooltip-title {
+            color: var(--ocean-blue);
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .tooltip-content {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* ========== ANOTAÇÕES PESSOAIS ========== */
+        .notes-section {
+            background: rgba(30, 41, 59, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 60px;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .notes-editor {
+            width: 100%;
+            min-height: 200px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            font-family: 'Source Code Pro', monospace;
+            line-height: 1.6;
+            resize: vertical;
+            margin-top: 20px;
+        }
+
+        .notes-editor:focus {
+            outline: none;
+            border-color: var(--volcano-orange);
+        }
+
+        /* ========== SCROLLBAR PERSONALIZADA ========== */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, var(--volcano-orange), var(--ocean-blue));
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, var(--ocean-blue), var(--primordial-green));
+        }
+
+        /* ========== RESPONSIVO ========== */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 80px 15px 30px;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .timeline-item {
+                width: 90%;
+                left: 10% !important;
+            }
+            
+            .timeline-dot {
+                left: -12px !important;
+                right: auto !important;
+            }
+            
+            .simulator-section,
+            .molecule-builder,
+            .quiz-section,
+            .notes-section {
+                padding: 25px;
+            }
+            
+            .theories-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .theory-pros-cons {
+                grid-template-columns: 1fr;
+            }
+            
+            .glossary-tooltip {
+                width: 250px;
+                left: 0;
+                transform: translateX(0) translateY(-10px);
+            }
+            
+            .glossary-term:hover .glossary-tooltip {
+                transform: translateX(0) translateY(-5px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chapter-title {
+                font-size: 1.2rem;
+            }
+            
+            .nav-btn {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .simulator-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .control-btn {
+                flex: 1;
+                text-align: center;
+            }
+        }
+
+        /* ========== ANIMAÇÕES ========== */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .shake {
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes celebrate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .celebrate {
+            animation: celebrate 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- ========== FUNDO PRIMORDIAL ========== -->
+    <div class="primordial-bg" id="primordialBg"></div>
+
+    <!-- ========== HEADER ========== -->
+    <header class="chapter-header">
+        <div class="nav-left">
+            <button class="back-btn" onclick="goBackToIndex()" title="Voltar ao Índice">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="chapter-info">
+                <div class="chapter-number">CAPÍTULO 01</div>
+                <div class="chapter-title">ORIGEM DA VIDA</div>
+            </div>
+        </div>
+        <div class="nav-right">
+            <button class="nav-btn" onclick="toggleNotes()" title="Anotações">
+                <i class="fas fa-edit"></i>
+            </button>
+            <button class="nav-btn" onclick="toggleGlossary()" title="Glossário">
+                <i class="fas fa-book"></i>
+            </button>
+            <button class="nav-btn" onclick="saveProgress()" title="Salvar Progresso">
+                <i class="fas fa-save"></i>
+            </button>
+            <button class="nav-btn" onclick="toggleAudio()" title="Áudio">
+                <i class="fas fa-volume-up"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- ========== CONTEÚDO PRINCIPAL ========== -->
+    <main class="main-content">
+        <!-- TIMELINE INTERATIVA -->
+        <section class="timeline-section">
+            <h2 class="section-title">
+                <i class="fas fa-hourglass-half"></i>
+                Linha do Tempo da Vida
+            </h2>
+            <div class="timeline-container">
+                <div class="timeline-line"></div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">4.6 bilhões de anos</div>
+                        <h3 class="timeline-title">Formação da Terra</h3>
+                        <p class="timeline-description">
+                            A Terra se forma a partir do disco protoplanetário que cercava o Sol jovem. 
+                            Inicialmente, um mundo de rocha derretida e intensa atividade vulcânica.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">4.4 bilhões de anos</div>
+                        <h3 class="timeline-title">Primeiros Oceanos</h3>
+                        <p class="timeline-description">
+                            Condensação do vapor de água forma os primeiros oceanos. 
+                            A atmosfera primitiva é rica em metano, amônia e hidrogênio.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">4.0 bilhões de anos</div>
+                        <h3 class="timeline-title">Sopa Primordial</h3>
+                        <p class="timeline-description">
+                            Moléculas orgânicas se acumulam nos oceanos primitivos. 
+                            Aminoácidos, nucleotídeos e açúcares formam a "sopa primordial".
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">3.8 bilhões de anos</div>
+                        <h3 class="timeline-title">Primeiras Moléculas Autorreplicantes</h3>
+                        <p class="timeline-description">
+                            Surgem as primeiras moléculas capazes de se autorreplicar, 
+                            provavelmente baseadas em <span class="glossary-term">RNA<span class="glossary-tooltip">
+                                <div class="tooltip-title">RNA (Ácido Ribonucleico)</div>
+                                <div class="tooltip-content">Molécula essencial para a síntese proteica que também pode atuar como catalisador e material genético.</div>
+                            </span></span>.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">3.5 bilhões de anos</div>
+                        <h3 class="timeline-title">Primeiras Células</h3>
+                        <p class="timeline-description">
+                            Surgem as primeiras células procarióticas. 
+                            Evidências fósseis mostram estromatólitos formados por cianobactérias.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SIMULADOR MILLER-UREY -->
+        <section class="simulator-section">
+            <div class="simulator-header">
+                <h2 class="simulator-title">
+                    <i class="fas fa-flask"></i>
+                    Simulador Miller-Urey
+                </h2>
+                <div class="controls">
+                    <button class="control-btn" onclick="resetSimulation()">
+                        <i class="fas fa-redo"></i> Reiniciar
+                    </button>
+                    <button class="control-btn" onclick="runSimulation()">
+                        <i class="fas fa-play"></i> Executar
+                    </button>
+                    <button class="control-btn" onclick="pauseSimulation()">
+                        <i class="fas fa-pause"></i> Pausar
+                    </button>
+                </div>
+            </div>
+
+            <div class="simulator-body">
+                <div class="simulation-canvas" id="simulationCanvas">
+                    <canvas id="millerCanvas" width="400" height="300"></canvas>
+                </div>
+
+                <div class="simulation-controls">
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Temperatura (°C)</span>
+                            <span class="control-value" id="tempValue">100</span>
+                        </div>
+                        <div class="slider-container">
+                            <input type="range" class="slider" id="tempSlider" min="50" max="200" value="100" oninput="updateTemperature(this.value)">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Pressão (atm)</span>
+                            <span class="control-value" id="pressureValue">1.0</span>
+                        </div>
+                        <div class="slider-container">
+                            <input type="range" class="slider" id="pressureSlider" min="0.5" max="5" step="0.1" value="1.0" oninput="updatePressure(this.value)">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Tempo de Experimento (dias)</span>
+                            <span class="control-value" id="timeValue">7</span>
+                        </div>
+                        <div class="slider-container">
+                            <input type="range" class="slider" id="timeSlider" min="1" max="30" value="7" oninput="updateTime(this.value)">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Composição Gasosa</span>
+                            <span class="control-value" id="gasValue">Mista</span>
+                        </div>
+                        <select class="slider" id="gasSelect" onchange="updateGasComposition(this.value)" style="padding: 10px;">
+                            <option value="mista">CH₄ + NH₃ + H₂ + H₂O</option>
+                            <option value="redutora">H₂ + CH₄ + NH₃</option>
+                            <option value="oxidante">CO₂ + N₂ + H₂O</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="simulation-results" id="simulationResults">
+                <div class="results-title">
+                    <i class="fas fa-chart-line"></i>
+                    Resultados da Simulação
+                </div>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <div class="result-value" id="aminoResult">0</div>
+                        <div class="result-label">Aminoácidos</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-value" id="nucleoResult">0</div>
+                        <div class="result-label">Nucleotídeos</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-value" id="sugarResult">0</div>
+                        <div class="result-label">Açúcares</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-value" id="lipidResult">0</div>
+                        <div class="result-label">Lipídios</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TEORIAS DA ORIGEM DA VIDA -->
+        <section class="theories-section">
+            <h2 class="section-title">
+                <i class="fas fa-brain"></i>
+                Teorias da Origem da Vida
+            </h2>
+            
+            <div class="theories-grid">
+                <div class="theory-card" onclick="selectTheory(this)" data-theory="abiogenese">
+                    <div class="theory-icon">⚗️</div>
+                    <h3 class="theory-title">Abiogênese Química</h3>
+                    <p class="theory-description">
+                        A vida surgiu a partir de reações químicas em condições pré-bióticas 
+                        na Terra primitiva, formando moléculas orgânicas simples que evoluíram 
+                        para sistemas complexos.
+                    </p>
+                    <div class="theory-pros-cons">
+                        <div class="pros">
+                            <div class="pros-title">
+                                <i class="fas fa-check-circle"></i>
+                                Evidências Experimentais
+                            </div>
+                            <ul style="color: rgba(255,255,255,0.8); font-size: 0.9rem; padding-left: 20px;">
+                                <li>Experimento Miller-Urey</li>
+                                <li>Síntese de RNA em laboratório</li>
+                                <li>Formação espontânea de vesículas</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <div class="cons-title">
+                                <i class="fas fa-times-circle"></i>
+                                Limitações
+                            </div>
+                            <ul style="color: rgba(255,255,255,0.8); font-size: 0.9rem; padding-left: 20px;">
+                                <li>Probabilidade baixa</li>
+                                <li>Condições específicas necessárias</li>
+                                <li>Salto para sistemas complexos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="theory-card" onclick="selectTheory(this)" data-theory="panspermia">
+                    <div class="theory-icon">☄️</div>
+                    <h3 class="theory-title">Panspermia</h3>
+                    <p class="theory-description">
+                        A vida ou seus precursores chegaram à Terra através de cometas, 
+                        meteoritos ou poeira interestelar, tendo se originado em outro 
+                        lugar do universo.
+                    </p>
+                    <div class="theory-pros-cons">
+                        <div class="pros">
+                            <div class="pros-title">
+                                <i class="fas fa-check-circle"></i>
+                                Pontos Fortes
+                            </div>
+                            <ul style="color: rgba(255,255,255,0.8); font-size: 0.9rem; padding-left: 20px;">
+                                <li>Moléculas orgânicas em meteoritos</li>
+                                <li>Resistência de bactérias ao espaço</li>
+                                <li>Tempo adicional para evolução</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <div class="cons-title">
+                                <i class="fas fa-times-circle"></i>
+                                Críticas
+                            </div>
+                            <ul style="color: rgba(255,255,255,0.8); font-size: 0.9rem; padding-left: 20px;">
+                                <li>Desloca problema da origem</li>
+                                <li>Condições extremas do espaço</li>
+                                <li>Evidências indiretas</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="theory-card" onclick="selectTheory(this)" data-theory="hidrotermal">
+                    <div class="theory-icon">🌋</div>
+                    <h3 class="theory-title">Fontes Hidrotermais</h3>
+                    <p class="theory-description">
+                        A vida surgiu em fontes hidrotermais no fundo do oceano, onde 
+                        condições estáveis, minerais catalíticos e gradientes químicos 
+                        favoreceram as primeiras reações bioquímicas.
+                    </p>
+                    <div class="theory-pros-cons">
+                        <div class="pros">
+                            <div class="pros-title">
+                                <i class="fas fa-check-circle"></i>
+                                Vantagens
+                            </div>
+                            <ul style="color: rgba(255,255,255,0.8); font-size: 0.9rem; padding-left: 20px;">
+                                <li>Proteção contra radiação</li>
+                                <li>Gradientes energéticos naturais</li>
+                                <li>Mineralogia catalítica</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <div class="cons-title">
+                                <i class="fas fa-times-circle"></i>
+                                Desvantagens
+                            </div>
+                            <ul style="color: rgba(255,255,255,0.8); font-size: 0.9rem; padding-left: 20px;">
+                                <li>Temperaturas extremas</li>
+                                <li>Pressões elevadas</li>
+                                <li>Evidências fósseis limitadas</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- QUIZ INTERATIVO -->
+        <section class="quiz-section" id="quizSection">
+            <h2 class="section-title">
+                <i class="fas fa-question-circle"></i>
+                Quiz Interativo
+            </h2>
+            
+            <div class="quiz-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="quizProgress" style="width: 0%"></div>
+                </div>
+                <span id="questionCounter">Pergunta 1/5</span>
+            </div>
+
+            <div class="question-container" id="questionContainer">
+                <div class="question-text" id="questionText">
+                    Qual experimento demonstrou pela primeira vez que moléculas orgânicas poderiam ser formadas a partir de compostos inorgânicos?
+                </div>
+                
+                <div class="options-grid" id="optionsGrid">
+                    <!-- Opções serão preenchidas por JavaScript -->
+                </div>
+            </div>
+
+            <div class="quiz-navigation">
+                <button class="nav-btn-large" onclick="previousQuestion()" id="prevBtn" disabled>
+                    <i class="fas fa-arrow-left"></i> Anterior
+                </button>
+                <button class="nav-btn-large" onclick="nextQuestion()" id="nextBtn">
+                    Próxima <i class="fas fa-arrow-right"></i>
+                </button>
+                <button class="nav-btn-large" onclick="submitQuiz()" id="submitBtn" style="display: none;">
+                    <i class="fas fa-paper-plane"></i> Enviar
+                </button>
+            </div>
+        </section>
+
+        <!-- ANOTAÇÕES PESSOAIS -->
+        <section class="notes-section" id="notesSection" style="display: none;">
+            <h2 class="section-title">
+                <i class="fas fa-edit"></i>
+                Suas Anotações
+            </h2>
+            
+            <textarea class="notes-editor" id="notesEditor" placeholder="Escreva suas anotações sobre a origem da vida aqui... Elas serão salvas automaticamente."></textarea>
+            
+            <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <button class="control-btn" onclick="saveNotes()">
+                    <i class="fas fa-save"></i> Salvar
+                </button>
+                <button class="control-btn" onclick="clearNotes()">
+                    <i class="fas fa-trash"></i> Limpar
+                </button>
+                <button class="control-btn" onclick="exportNotes()">
+                    <i class="fas fa-download"></i> Exportar
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- ========== MODAL DE GLOSSÁRIO ========== -->
+    <div id="glossaryModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center;">
+        <div style="background: var(--rock-gray); border-radius: 20px; width: 90%; max-width: 600px; max-height: 80vh; overflow: auto; padding: 30px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="color: var(--ocean-blue); font-size: 1.8rem;">
+                    <i class="fas fa-book"></i> Glossário
+                </h2>
+                <button onclick="toggleGlossary()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">&times;</button>
+            </div>
+            <div id="glossaryContent">
+                <!-- Conteúdo do glossário será preenchido por JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== VARIÁVEIS GLOBAIS ==========
+        let currentSimulation = null;
+        let simulationRunning = false;
+        let userProgress = {
+            timeline: [],
+            quiz: { score: 0, answers: [] },
+            notes: '',
+            completed: false
+        };
+        let currentQuestion = 0;
+        let selectedAnswer = null;
+        let audioEnabled = false;
+
+        // ========== INICIALIZAÇÃO ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("🌋 Capítulo 01 - Origem da Vida carregado!");
+            
+            // Inicializar fundo dinâmico
+            createPrimordialBackground();
+            
+            // Inicializar timeline
+            initTimeline();
+            
+            // Inicializar simulador
+            initMillerUreySimulator();
+            
+            // Carregar progresso
+            loadProgress();
+            
+            // Inicializar quiz
+            initQuiz();
+            
+            // Configurar glossário
+            initGlossary();
+            
+            // Detectar Kodular
+            if (/Kodular|WebView|Android.*AppleWebKit/.test(navigator.userAgent)) {
+                optimizeForKodular();
+            }
+            
+            // Configurar auto-save
+            setInterval(saveProgress, 30000);
+        });
+
+        // ========== NAVEGAÇÃO ==========
+        function goBackToIndex() {
+            if (confirm('Salvar progresso antes de sair?')) {
+                saveProgress();
+            }
+            window.location.href = 'index.html';
+        }
+
+        // ========== FUNDO DINÂMICO ==========
+        function createPrimordialBackground() {
+            const bg = document.getElementById('primordialBg');
+            
+            // Criar lava flow
+            const lava = document.createElement('div');
+            lava.className = 'lava-flow';
+            bg.appendChild(lava);
+            
+            // Criar bolhas
+            for (let i = 0; i < 20; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                bubble.style.width = bubble.style.height = (20 + Math.random() * 50) + 'px';
+                bubble.style.left = Math.random() * 100 + '%';
+                bubble.style.animationDelay = Math.random() * 20 + 's';
+                bubble.style.animationDuration = (15 + Math.random() * 15) + 's';
+                bg.appendChild(bubble);
+            }
+        }
+
+        // ========== TIMELINE INTERATIVA ==========
+        function initTimeline() {
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        // Registrar visualização no progresso
+                        const year = entry.target.querySelector('.timeline-year').textContent;
+                        if (!userProgress.timeline.includes(year)) {
+                            userProgress.timeline.push(year);
+                            saveProgress();
+                        }
+                    }
+                });
+            }, {
+                threshold: 0.3
+            });
+            
+            timelineItems.forEach(item => observer.observe(item));
+        }
+
+        // ========== SIMULADOR MILLER-UREY ==========
+        function initMillerUreySimulator() {
+            const canvas = document.getElementById('millerCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Ajustar canvas para alta resolução
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = 400 * dpr;
+            canvas.height = 300 * dpr;
+            ctx.scale(dpr, dpr);
+            
+            // Desenhar aparato inicial
+            drawApparatus(ctx);
+        }
+
+        function drawApparatus(ctx) {
+            ctx.clearRect(0, 0, 400, 300);
+            
+            // Desenhar frasco de reação
+            ctx.fillStyle = 'rgba(14, 165, 233, 0.3)';
+            ctx.fillRect(100, 100, 200, 100);
+            ctx.strokeStyle = 'rgba(14, 165, 233, 0.8)';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(100, 100, 200, 100);
+            
+            // Desenhar eletrodos
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.fillRect(180, 50, 40, 50);
+            
+            // Desenhar condensador
+            ctx.beginPath();
+            ctx.moveTo(150, 200);
+            ctx.lineTo(250, 200);
+            ctx.lineTo(250, 250);
+            ctx.lineTo(150, 250);
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(16, 185, 129, 0.3)';
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(16, 185, 129, 0.8)';
+            ctx.stroke();
+            
+            // Desenhar moléculas
+            drawMolecules(ctx);
+        }
+
+        function drawMolecules(ctx) {
+            const molecules = [
+                { x: 120, y: 120, type: 'CH4', color: '#f97316' },
+                { x: 160, y: 140, type: 'NH3', color: '#0ea5e9' },
+                { x: 200, y: 120, type: 'H2', color: '#10b981' },
+                { x: 240, y: 140, type: 'H2O', color: '#8b5cf6' }
+            ];
+            
+            molecules.forEach(mol => {
+                // Desenhar círculo da molécula
+                ctx.beginPath();
+                ctx.arc(mol.x, mol.y, 15, 0, Math.PI * 2);
+                ctx.fillStyle = mol.color;
+                ctx.fill();
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                
+                // Desenhar fórmula
+                ctx.fillStyle = 'white';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(mol.type, mol.x, mol.y);
+            });
+        }
+
+        function updateTemperature(value) {
+            document.getElementById('tempValue').textContent = value + '°C';
+            updateSimulationResults();
+        }
+
+        function updatePressure(value) {
+            document.getElementById('pressureValue').textContent = value + ' atm';
+            updateSimulationResults();
+        }
+
+        function updateTime(value) {
+            document.getElementById('timeValue').textContent = value + ' dias';
+            updateSimulationResults();
+        }
+
+        function updateGasComposition(value) {
+            document.getElementById('gasValue').textContent = 
+                value === 'mista' ? 'Mista' : 
+                value === 'redutora' ? 'Redutora' : 'Oxidante';
+            updateSimulationResults();
+        }
+
+        function updateSimulationResults() {
+            if (!simulationRunning) return;
+            
+            const temp = parseInt(document.getElementById('tempValue').textContent);
+            const pressure = parseFloat(document.getElementById('pressureValue').textContent);
+            const time = parseInt(document.getElementById('timeValue').textContent);
+            const gas = document.getElementById('gasValue').textContent;
+            
+            // Calcular resultados baseados nos parâmetros
+            let amino = Math.round((temp * time) / 1000);
+            let nucleo = Math.round((temp * pressure) / 100);
+            let sugar = Math.round((time * pressure) / 10);
+            let lipid = Math.round((temp * time * pressure) / 10000);
+            
+            // Ajustar por composição gasosa
+            if (gas.includes('Redutora')) {
+                amino *= 1.5;
+                nucleo *= 1.3;
+            } else if (gas.includes('Oxidante')) {
+                amino *= 0.7;
+                sugar *= 1.2;
+            }
+            
+            // Atualizar display
+            document.getElementById('aminoResult').textContent = amino;
+            document.getElementById('nucleoResult').textContent = nucleo;
+            document.getElementById('sugarResult').textContent = sugar;
+            document.getElementById('lipidResult').textContent = lipid;
+            
+            // Animar resultados
+            animateResults();
+        }
+
+        function runSimulation() {
+            if (simulationRunning) return;
+            
+            simulationRunning = true;
+            document.getElementById('simulationResults').style.display = 'block';
+            
+            // Animar o canvas
+            animateSimulation();
+            
+            // Calcular resultados iniciais
+            updateSimulationResults();
+            
+            // Mostrar notificação
+            showNotification('Simulação em execução!', 'success');
+        }
+
+        function resetSimulation() {
+            simulationRunning = false;
+            
+            // Resetar sliders
+            document.getElementById('tempSlider').value = 100;
+            document.getElementById('pressureSlider').value = 1.0;
+            document.getElementById('timeSlider').value = 7;
+            document.getElementById('gasSelect').value = 'mista';
+            
+            // Atualizar valores
+            updateTemperature(100);
+            updatePressure(1.0);
+            updateTime(7);
+            updateGasComposition('mista');
+            
+            // Resetar resultados
+            document.getElementById('aminoResult').textContent = '0';
+            document.getElementById('nucleoResult').textContent = '0';
+            document.getElementById('sugarResult').textContent = '0';
+            document.getElementById('lipidResult').textContent = '0';
+            
+            // Resetar canvas
+            const canvas = document.getElementById('millerCanvas');
+            const ctx = canvas.getContext('2d');
+            drawApparatus(ctx);
+            
+            showNotification('Simulação reiniciada!', 'info');
+        }
+
+        function pauseSimulation() {
+            simulationRunning = false;
+            showNotification('Simulação pausada', 'warning');
+        }
+
+        function animateSimulation() {
+            if (!simulationRunning) return;
+            
+            const canvas = document.getElementById('millerCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Adicionar partículas animadas
+            const particleCount = 20;
+            for (let i = 0; i < particleCount; i++) {
+                const x = 100 + Math.random() * 200;
+                const y = 100 + Math.random() * 100;
+                const radius = 2 + Math.random() * 3;
+                const color = `rgba(${Math.random() * 255}, ${Math.random() * 255}, 233, 0.8)`;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.fillStyle = color;
+                ctx.fill();
+            }
+            
+            // Continuar animação
+            requestAnimationFrame(() => {
+                if (simulationRunning) {
+                    drawApparatus(ctx);
+                    animateSimulation();
+                }
+            });
+        }
+
+        function animateResults() {
+            const results = document.querySelectorAll('.result-value');
+            results.forEach(result => {
+                result.classList.add('celebrate');
+                setTimeout(() => {
+                    result.classList.remove('celebrate');
+                }, 500);
+            });
+        }
+
+        // ========== TEORIAS COMPARATIVAS ==========
+        function selectTheory(card) {
+            // Remover seleção de todas as cards
+            document.querySelectorAll('.theory-card').forEach(c => {
+                c.classList.remove('active');
+            });
+            
+            // Selecionar card clicada
+            card.classList.add('active');
+            
+            // Registrar no progresso
+            const theory = card.dataset.theory;
+            if (!userProgress.selectedTheories) {
+                userProgress.selectedTheories = [];
+            }
+            if (!userProgress.selectedTheories.includes(theory)) {
+                userProgress.selectedTheories.push(theory);
+                saveProgress();
+            }
+            
+            showNotification(`Teoria "${card.querySelector('.theory-title').textContent}" selecionada`, 'info');
+        }
+
+        // ========== QUIZ INTERATIVO ==========
+        const quizQuestions = [
+            {
+                question: "Qual experimento demonstrou pela primeira vez que moléculas orgânicas poderiam ser formadas a partir de compostos inorgânicos?",
+                options: [
+                    "Experimento de Pasteur",
+                    "Experimento de Miller-Urey",
+                    "Experimento de Redi",
+                    "Experimento de Needham"
+                ],
+                correct: 1,
+                explanation: "O experimento de Miller-Urey (1953) simulou as condições da Terra primitiva e produziu aminoácidos a partir de gases inorgânicos."
+            },
+            {
+                question: "Qual desses NÃO é uma teoria sobre a origem da vida?",
+                options: [
+                    "Abiogênese química",
+                    "Panspermia",
+                    "Criacionismo",
+                    "Fontes hidrotermais"
+                ],
+                correct: 2,
+                explanation: "O criacionismo não é uma teoria científica sobre a origem da vida, pois não é baseada em evidências empíricas testáveis."
+            },
+            {
+                question: "Qual molécula é considerada como possível primeira forma de vida autorreplicante?",
+                options: [
+                    "DNA",
+                    "Proteínas",
+                    "RNA",
+                    "Lipídios"
+                ],
+                correct: 2,
+                explanation: "A hipótese do mundo do RNA sugere que o RNA foi a primeira molécula de vida por poder armazenar informação e catalisar reações."
+            },
+            {
+                question: "Qual desses gases NÃO fazia parte da atmosfera primitiva da Terra?",
+                options: [
+                    "Metano (CH₄)",
+                    "Amônia (NH₃)",
+                    "Oxigênio (O₂)",
+                    "Hidrogênio (H₂)"
+                ],
+                correct: 2,
+                explanation: "O oxigênio não estava presente na atmosfera primitiva; ele foi produzido posteriormente por organismos fotossintetizantes."
+            },
+            {
+                question: "Qual era a principal fonte de energia para as reações químicas na Terra primitiva?",
+                options: [
+                    "Energia geotérmica",
+                    "Radiação ultravioleta",
+                    "Descargas elétricas (relâmpagos)",
+                    "Todas as alternativas"
+                ],
+                correct: 3,
+                explanation: "Várias fontes de energia atuavam na Terra primitiva: radiação UV, relâmpagos, calor vulcânico e radiação ionizante."
+            }
+        ];
+
+        function initQuiz() {
+            loadQuestion(currentQuestion);
+        }
+
+        function loadQuestion(index) {
+            const question = quizQuestions[index];
+            
+            // Atualizar contador
+            document.getElementById('questionCounter').textContent = 
+                `Pergunta ${index + 1}/${quizQuestions.length}`;
+            
+            // Atualizar barra de progresso
+            const progress = ((index) / quizQuestions.length) * 100;
+            document.getElementById('quizProgress').style.width = `${progress}%`;
+            
+            // Atualizar texto da pergunta
+            document.getElementById('questionText').textContent = question.question;
+            
+            // Limpar opções anteriores
+            const optionsGrid = document.getElementById('optionsGrid');
+            optionsGrid.innerHTML = '';
+            
+            // Adicionar novas opções
+            question.options.forEach((option, i) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.textContent = option;
+                optionDiv.dataset.index = i;
+                optionDiv.onclick = () => selectOption(optionDiv, i);
+                optionsGrid.appendChild(optionDiv);
+            });
+            
+            // Atualizar botões de navegação
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').style.display = 
+                index === quizQuestions.length - 1 ? 'none' : 'block';
+            document.getElementById('submitBtn').style.display = 
+                index === quizQuestions.length - 1 ? 'block' : 'none';
+            
+            // Restaurar resposta selecionada anteriormente
+            if (userProgress.quiz.answers[index] !== undefined) {
+                const previousAnswer = userProgress.quiz.answers[index];
+                const options = document.querySelectorAll('.option');
+                options[previousAnswer.selected].classList.add('selected');
+                if (previousAnswer.correct !== undefined) {
+                    options[previousAnswer.selected].classList.add(
+                        previousAnswer.correct ? 'correct' : 'incorrect'
+                    );
+                    options[question.correct].classList.add('correct');
+                }
+            }
+            
+            selectedAnswer = userProgress.quiz.answers[index]?.selected;
+        }
+
+        function selectOption(optionDiv, index) {
+            // Só permitir seleção se ainda não foi verificada
+            const question = quizQuestions[currentQuestion];
+            const alreadyAnswered = userProgress.quiz.answers[currentQuestion]?.correct !== undefined;
+            
+            if (alreadyAnswered) return;
+            
+            // Remover seleção anterior
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Selecionar nova opção
+            optionDiv.classList.add('selected');
+            selectedAnswer = index;
+            
+            // Salvar resposta
+            if (!userProgress.quiz.answers[currentQuestion]) {
+                userProgress.quiz.answers[currentQuestion] = {
+                    selected: index,
+                    correct: index === question.correct
+                };
+            } else {
+                userProgress.quiz.answers[currentQuestion].selected = index;
+                userProgress.quiz.answers[currentQuestion].correct = index === question.correct;
+            }
+            
+            saveProgress();
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < quizQuestions.length - 1) {
+                currentQuestion++;
+                loadQuestion(currentQuestion);
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion(currentQuestion);
+            }
+        }
+
+        function submitQuiz() {
+            // Calcular pontuação
+            let score = 0;
+            userProgress.quiz.answers.forEach(answer => {
+                if (answer && answer.correct) {
+                    score++;
+                }
+            });
+            
+            userProgress.quiz.score = score;
+            userProgress.completed = true;
+            saveProgress();
+            
+            // Mostrar resultados
+            showNotification(`Quiz completo! Pontuação: ${score}/${quizQuestions.length}`, 'success');
+            
+            // Destacar respostas corretas/incorretas
+            const question = quizQuestions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach((opt, i) => {
+                if (i === question.correct) {
+                    opt.classList.add('correct');
+                } else if (userProgress.quiz.answers[currentQuestion]?.selected === i) {
+                    opt.classList.add('incorrect');
+                }
+            });
+        }
+
+        // ========== GLOSSÁRIO ==========
+        const glossary = {
+            'RNA': 'Ácido ribonucleico, molécula que pode atuar como material genético e catalisador biológico.',
+            'DNA': 'Ácido desoxirribonucleico, molécula que armazena informação genética na maioria dos organismos.',
+            'Aminoácido': 'Unidade básica das proteínas, existem 20 tipos diferentes em organismos vivos.',
+            'Nucleotídeo': 'Unidade básica dos ácidos nucleicos (DNA e RNA).',
+            'Procarioto': 'Organismo unicelular sem núcleo definido (bactérias e arqueas).',
+            'Eucarioto': 'Organismo com células que possuem núcleo definido e organelas membranares.',
+            'LUCA': 'Último Ancestral Comum Universal, organismo hipotético do qual todos os seres vivos descendem.',
+            'Estromatólito': 'Estrutura rochosa formada por colônias de cianobactérias, alguns dos fósseis mais antigos.',
+            'Autocatálise': 'Processo no qual um composto químico acelera sua própria síntese.',
+            'Coacervado': 'Agregado de moléculas orgânicas cercadas por uma membrana lipídica, modelo de protocélula.'
+        };
+
+        function initGlossary() {
+            const glossaryContent = document.getElementById('glossaryContent');
+            glossaryContent.innerHTML = '';
+            
+            Object.entries(glossary).forEach(([term, definition]) => {
+                const termDiv = document.createElement('div');
+                termDiv.style.cssText = `
+                    background: rgba(255,255,255,0.05);
+                    border-radius: 10px;
+                    padding: 15px;
+                    margin-bottom: 10px;
+                    border-left: 4px solid var(--ocean-blue);
+                `;
+                
+                termDiv.innerHTML = `
+                    <div style="color: var(--ocean-blue); font-weight: 700; margin-bottom: 5px;">
+                        ${term}
+                    </div>
+                    <div style="color: rgba(255,255,255,0.8); font-size: 0.95rem;">
+                        ${definition}
+                    </div>
+                `;
+                
+                glossaryContent.appendChild(termDiv);
+            });
+        }
+
+        function toggleGlossary() {
+            const modal = document.getElementById('glossaryModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        // ========== ANOTAÇÕES ==========
+        function toggleNotes() {
+            const notesSection = document.getElementById('notesSection');
+            notesSection.style.display = notesSection.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function saveNotes() {
+            const notes = document.getElementById('notesEditor').value;
+            userProgress.notes = notes;
+            saveProgress();
+            showNotification('Anotações salvas!', 'success');
+        }
+
+        function clearNotes() {
+            if (confirm('Limpar todas as anotações?')) {
+                document.getElementById('notesEditor').value = '';
+                userProgress.notes = '';
+                saveProgress();
+                showNotification('Anotações limpas!', 'info');
+            }
+        }
+
+        function exportNotes() {
+            const notes = document.getElementById('notesEditor').value;
+            const blob = new Blob([notes], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'anotacoes_origem_da_vida.txt';
+            a.click();
+            showNotification('Anotações exportadas!', 'success');
+        }
+
+        // ========== PROGRESSO E PERSISTÊNCIA ==========
+        function loadProgress() {
+            const saved = localStorage.getItem('biolomemo_chapter01');
+            if (saved) {
+                try {
+                    userProgress = JSON.parse(saved);
+                    
+                    // Restaurar anotações
+                    if (userProgress.notes) {
+                        document.getElementById('notesEditor').value = userProgress.notes;
+                    }
+                    
+                    // Restaurar quiz
+                    if (userProgress.quiz.answers.length > 0) {
+                        currentQuestion = userProgress.quiz.answers.length - 1;
+                        if (currentQuestion >= quizQuestions.length) {
+                            currentQuestion = quizQuestions.length - 1;
+                        }
+                        loadQuestion(currentQuestion);
+                    }
+                } catch (e) {
+                    console.error('Erro ao carregar progresso:', e);
+                }
+            }
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem('biolomemo_chapter01', JSON.stringify(userProgress));
+                console.log('Progresso salvo:', userProgress);
+            } catch (e) {
+                console.error('Erro ao salvar progresso:', e);
+            }
+        }
+
+        // ========== NOTIFICAÇÕES ==========
+        function showNotification(message, type = 'info') {
+            // Criar elemento de notificação
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                background: ${type === 'success' ? 'rgba(16, 185, 129, 0.9)' : 
+                           type === 'error' ? 'rgba(220, 38, 38, 0.9)' : 
+                           'rgba(30, 41, 59, 0.95)'};
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                z-index: 10000;
+                font-weight: 600;
+                backdrop-filter: blur(10px);
+                border: 1px solid ${type === 'success' ? 'var(--primordial-green)' : 
+                          type === 'error' ? 'var(--lava-red)' : 'var(--ocean-blue)'};
+                transform: translateX(120%);
+                transition: transform 0.3s ease;
+            `;
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            // Animar entrada
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 10);
+            
+            // Remover após 3 segundos
+            setTimeout(() => {
+                notification.style.transform = 'translateX(120%)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // ========== ÁUDIO ==========
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            const btn = document.querySelector('.nav-btn:nth-child(4) i');
+            btn.className = audioEnabled ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+            
+            if (audioEnabled) {
+                // Iniciar áudio ambiente
+                playAmbientAudio();
+            } else {
+                // Parar áudio
+                stopAmbientAudio();
+            }
+            
+            showNotification(audioEnabled ? 'Áudio ativado' : 'Áudio desativado', 'info');
+        }
+
+        function playAmbientAudio() {
+            // Implementação básica - poderia usar Web Audio API
+            console.log('Áudio ambiente iniciado');
+        }
+
+        function stopAmbientAudio() {
+            console.log('Áudio ambiente parado');
+        }
+
+        // ========== OTIMIZAÇÃO KODULAR ==========
+        function optimizeForKodular() {
+            console.log('📱 Otimizando para Kodular...');
+            
+            // Aumentar áreas de toque
+            document.querySelectorAll('button, .option, .theory-card').forEach(el => {
+                el.style.minHeight = '44px';
+                el.style.minWidth = '44px';
+            });
+            
+            // Habilitar scroll suave
+            document.documentElement.style.cssText += `
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior: none;
+            `;
+            
+            // Forçar fullscreen
+            setTimeout(() => {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                }
+            }, 1000);
+        }
+
+        // ========== EVENTOS DE TECLADO ==========
+        document.addEventListener('keydown', (e) => {
+            // Ctrl+S para salvar
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                saveProgress();
+                showNotification('Progresso salvo!', 'success');
+            }
+            
+            // Esc para sair
+            if (e.key === 'Escape') {
+                goBackToIndex();
+            }
+            
+            // Setas para navegar no quiz
+            if (document.getElementById('quizSection').style.display !== 'none') {
+                if (e.key === 'ArrowRight') {
+                    nextQuestion();
+                } else if (e.key === 'ArrowLeft') {
+                    previousQuestion();
+                } else if (e.key >= '1' && e.key <= '4') {
+                    const index = parseInt(e.key) - 1;
+                    const options = document.querySelectorAll('.option');
+                    if (options[index]) {
+                        selectOption(options[index], index);
+                    }
+                }
+            }
+        });
+
+        // ========== INICIALIZAR APÓS CARREGAMENTO ==========
+        window.onload = function() {
+            setTimeout(() => {
+                showNotification('Bem-vindo ao Capítulo 01: Origem da Vida!', 'info');
+            }, 1000);
+        };
+    </script>
+</body>
+</html>

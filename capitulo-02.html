@@ -1,0 +1,2815 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Capítulo 02 • Citologia - BIOLOMEMO</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;900&family=Source+Code+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* ========== VARIÁVEIS E RESET ========== */
+        :root {
+            --cell-blue: #0ea5e9;
+            --membrane-purple: #8b5cf6;
+            --mitochondria-green: #10b981;
+            --nucleus-red: #ef4444;
+            --lysosome-yellow: #f59e0b;
+            --golgi-orange: #f97316;
+            --er-indigo: #6366f1;
+            --deep-space: #0a0a16;
+            --panel-dark: #151530;
+            --panel-light: #1e293b;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-dim: rgba(255, 255, 255, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        body {
+            background: var(--deep-space);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ========== FUNDO CELULAR ========== */
+        .cell-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(14, 165, 233, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.06) 0%, transparent 40%),
+                linear-gradient(135deg, #0a0a16 0%, #0f0f25 100%);
+            overflow: hidden;
+        }
+
+        .organelle {
+            position: absolute;
+            border-radius: 50%;
+            animation: floatOrganelle 20s infinite linear;
+            opacity: 0.1;
+            filter: blur(1px);
+        }
+
+        .mitochondria {
+            background: radial-gradient(circle, var(--mitochondria-green), transparent);
+            width: 40px;
+            height: 20px;
+            animation: floatMitochondria 15s infinite linear;
+        }
+
+        .ribosome {
+            background: radial-gradient(circle, var(--nucleus-red), transparent);
+            width: 8px;
+            height: 8px;
+            animation: floatRibosome 10s infinite linear;
+        }
+
+        .vesicle {
+            background: radial-gradient(circle, var(--golgi-orange), transparent);
+            width: 15px;
+            height: 15px;
+            animation: floatVesicle 12s infinite linear;
+        }
+
+        @keyframes floatOrganelle {
+            0% { transform: translateY(0) translateX(0); }
+            100% { transform: translateY(-100vh) translateX(100px); }
+        }
+
+        @keyframes floatMitochondria {
+            0%, 100% { transform: translateY(0) rotate(0deg); border-radius: 50% 30% 50% 30%; }
+            50% { transform: translateY(-20px) rotate(180deg); border-radius: 30% 50% 30% 50%; }
+        }
+
+        @keyframes floatRibosome {
+            0%, 100% { transform: scale(1); opacity: 0.1; }
+            50% { transform: scale(1.5); opacity: 0.3; }
+        }
+
+        @keyframes floatVesicle {
+            0% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.2); }
+            100% { transform: translateY(0) scale(1); }
+        }
+
+        /* ========== HEADER ========== */
+        .chapter-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 10, 22, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(14, 165, 233, 0.3);
+            z-index: 1000;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-btn {
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            color: var(--cell-blue);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .back-btn:hover {
+            background: rgba(14, 165, 233, 0.2);
+            transform: translateX(-2px);
+        }
+
+        .chapter-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chapter-number {
+            font-size: 0.9rem;
+            color: var(--cell-blue);
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+
+        .chapter-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--cell-blue), var(--membrane-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .nav-btn:hover {
+            color: var(--cell-blue);
+            border-color: var(--cell-blue);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background: rgba(14, 165, 233, 0.2);
+            color: var(--cell-blue);
+            border-color: var(--cell-blue);
+        }
+
+        /* ========== CONTEÚDO PRINCIPAL ========== */
+        .main-content {
+            padding: 100px 20px 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ========== TIMELINE DA CITOLOGIA ========== */
+        .timeline-section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--cell-blue);
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .section-title::before,
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cell-blue), transparent);
+        }
+
+        .timeline-container {
+            position: relative;
+            padding: 40px 0;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--cell-blue), var(--membrane-purple));
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            width: 45%;
+            margin-bottom: 50px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 55%;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: var(--cell-blue);
+            border: 3px solid white;
+            border-radius: 50%;
+            top: 20px;
+            right: -12px;
+            z-index: 2;
+            animation: nucleusPulse 2s infinite alternate;
+        }
+
+        @keyframes nucleusPulse {
+            0% { box-shadow: 0 0 0 0px rgba(14, 165, 233, 0.4); }
+            100% { box-shadow: 0 0 0 10px rgba(14, 165, 233, 0); }
+        }
+
+        .timeline-item:nth-child(even) .timeline-dot {
+            left: -12px;
+            right: auto;
+        }
+
+        .timeline-content {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--cell-blue), var(--membrane-purple));
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            border-color: var(--cell-blue);
+            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.2);
+        }
+
+        .timeline-year {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--cell-blue);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .timeline-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .timeline-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        /* ========== MICROSCÓPIO VIRTUAL ========== */
+        .microscope-section {
+            background: rgba(30, 41, 59, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 60px;
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .microscope-section::before {
+            content: '🔬';
+            position: absolute;
+            top: -20px;
+            right: 20px;
+            font-size: 8rem;
+            opacity: 0.05;
+            transform: rotate(15deg);
+            z-index: 0;
+        }
+
+        .microscope-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .microscope-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--cell-blue);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+        }
+
+        .control-btn {
+            padding: 10px 20px;
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid var(--cell-blue);
+            border-radius: 8px;
+            color: var(--cell-blue);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-btn:hover {
+            background: rgba(14, 165, 233, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .microscope-body {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 1024px) {
+            .microscope-body {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .slide-selector {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .slide-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slide-option:hover {
+            background: rgba(14, 165, 233, 0.1);
+            border-color: var(--cell-blue);
+            transform: translateX(5px);
+        }
+
+        .slide-option.active {
+            background: rgba(14, 165, 233, 0.2);
+            border-color: var(--cell-blue);
+            border-left: 5px solid var(--cell-blue);
+        }
+
+        .slide-preview {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cell-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .microscope-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .control-value {
+            color: var(--cell-blue);
+            font-weight: 700;
+        }
+
+        .slider-container {
+            position: relative;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--cell-blue);
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid white;
+            transition: all 0.2s ease;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 10px var(--cell-blue);
+        }
+
+        /* ========== ORGANELAS INTERATIVAS ========== */
+        .organelles-section {
+            margin-bottom: 60px;
+        }
+
+        .organelles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .organelle-card {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .organelle-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.03), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .organelle-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .organelle-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.2);
+        }
+
+        .organelle-card.nucleus {
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .organelle-card.mitochondria {
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .organelle-card.golgi {
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+
+        .organelle-card.er {
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .organelle-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .organelle-card.nucleus .organelle-icon {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--nucleus-red);
+        }
+
+        .organelle-card.mitochondria .organelle-icon {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--mitochondria-green);
+        }
+
+        .organelle-card.golgi .organelle-icon {
+            background: rgba(249, 115, 22, 0.1);
+            color: var(--golgi-orange);
+        }
+
+        .organelle-card.er .organelle-icon {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--er-indigo);
+        }
+
+        .organelle-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .organelle-function {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .organelle-details {
+            display: none;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 3px solid var(--cell-blue);
+        }
+
+        .organelle-details.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== CONSTRUTOR DE CÉLULAS ========== */
+        .cell-builder {
+            background: rgba(30, 41, 59, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 60px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .builder-area {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 1024px) {
+            .builder-area {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .organelle-palette {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .palette-item {
+            aspect-ratio: 1;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            padding: 10px;
+        }
+
+        .palette-item:hover {
+            background: rgba(14, 165, 233, 0.1);
+            border-color: var(--cell-blue);
+            transform: scale(1.05);
+        }
+
+        .palette-icon {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .palette-label {
+            font-size: 0.8rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .cell-canvas-area {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            min-height: 400px;
+            position: relative;
+            overflow: hidden;
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        #cellCanvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .cell-membrane {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%;
+            height: 70%;
+            border: 3px solid rgba(139, 92, 246, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .cell-info {
+            background: rgba(30, 41, 59, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        /* ========== QUIZ INTERATIVO ========== */
+        .quiz-section {
+            background: rgba(30, 41, 59, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 60px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .quiz-progress {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cell-blue), var(--membrane-purple));
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .question-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 25px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .option.selected {
+            background: rgba(14, 165, 233, 0.2);
+            border-color: var(--cell-blue);
+        }
+
+        .option.correct {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--mitochondria-green);
+        }
+
+        .option.incorrect {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: var(--nucleus-red);
+        }
+
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .nav-btn-large {
+            padding: 12px 30px;
+            background: linear-gradient(45deg, var(--cell-blue), var(--membrane-purple));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn-large:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3);
+        }
+
+        .nav-btn-large:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ========== ANOTAÇÕES PESSOAIS ========== */
+        .notes-section {
+            background: rgba(30, 41, 59, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 60px;
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .notes-editor {
+            width: 100%;
+            min-height: 200px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            font-family: 'Source Code Pro', monospace;
+            line-height: 1.6;
+            resize: vertical;
+            margin-top: 20px;
+            font-size: 1rem;
+        }
+
+        .notes-editor:focus {
+            outline: none;
+            border-color: var(--cell-blue);
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.1);
+        }
+
+        .notes-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* ========== GLOSSÁRIO ========== */
+        .glossary-term {
+            color: var(--cell-blue);
+            border-bottom: 2px dotted var(--cell-blue);
+            cursor: help;
+            position: relative;
+        }
+
+        .glossary-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid var(--cell-blue);
+            border-radius: 10px;
+            padding: 15px;
+            width: 300px;
+            z-index: 10000;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            font-size: 0.9rem;
+        }
+
+        .glossary-term:hover .glossary-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-5px);
+        }
+
+        .tooltip-title {
+            color: var(--cell-blue);
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .tooltip-content {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+        }
+
+        /* ========== NOTIFICAÇÕES ========== */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid var(--cell-blue);
+            border-left: 4px solid var(--cell-blue);
+            border-radius: 10px;
+            padding: 15px 25px;
+            max-width: 350px;
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left-color: var(--mitochondria-green);
+        }
+
+        .notification.error {
+            border-left-color: var(--nucleus-red);
+        }
+
+        .notification.warning {
+            border-left-color: var(--lysosome-yellow);
+        }
+
+        /* ========== MODAIS ========== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--panel-dark);
+            border-radius: 20px;
+            border: 1px solid var(--cell-blue);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+        }
+
+        .modal-header {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--cell-blue);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            max-height: calc(80vh - 80px);
+        }
+
+        /* ========== SCROLLBAR ========== */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, var(--cell-blue), var(--membrane-purple));
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, var(--membrane-purple), var(--er-indigo));
+        }
+
+        /* ========== RESPONSIVIDADE ========== */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 80px 15px 30px;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .section-title::before,
+            .section-title::after {
+                display: none;
+            }
+            
+            .timeline-item {
+                width: 90%;
+                left: 10% !important;
+            }
+            
+            .timeline-dot {
+                left: -12px !important;
+                right: auto !important;
+            }
+            
+            .microscope-section,
+            .cell-builder,
+            .quiz-section,
+            .notes-section {
+                padding: 25px;
+            }
+            
+            .microscope-body {
+                grid-template-columns: 1fr;
+            }
+            
+            .builder-area {
+                grid-template-columns: 1fr;
+            }
+            
+            .organelles-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quiz-navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-btn-large {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .glossary-tooltip {
+                width: 250px;
+                left: 0;
+                transform: translateX(0) translateY(-10px);
+            }
+            
+            .glossary-term:hover .glossary-tooltip {
+                transform: translateX(0) translateY(-5px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chapter-title {
+                font-size: 1.2rem;
+            }
+            
+            .nav-btn {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .microscope-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .control-btn {
+                flex: 1;
+                text-align: center;
+                justify-content: center;
+            }
+            
+            .organelle-palette {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .notes-actions {
+                flex-direction: column;
+            }
+            
+            .notification {
+                max-width: calc(100% - 40px);
+            }
+        }
+
+        /* ========== ANIMAÇÕES ========== */
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease forwards;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .shake {
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes celebrate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .celebrate {
+            animation: celebrate 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- ========== FUNDO CELULAR ========== -->
+    <div class="cell-bg" id="cellBackground"></div>
+
+    <!-- ========== HEADER ========== -->
+    <header class="chapter-header">
+        <div class="nav-left">
+            <button class="back-btn" onclick="goBackToIndex()" title="Voltar ao Índice">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="chapter-info">
+                <div class="chapter-number">CAPÍTULO 02</div>
+                <div class="chapter-title">CITOLOGIA</div>
+            </div>
+        </div>
+        <div class="nav-right">
+            <button class="nav-btn" onclick="toggleNotes()" title="Anotações">
+                <i class="fas fa-edit"></i>
+            </button>
+            <button class="nav-btn" onclick="toggleGlossary()" title="Glossário">
+                <i class="fas fa-book"></i>
+            </button>
+            <button class="nav-btn" onclick="saveProgress()" title="Salvar Progresso">
+                <i class="fas fa-save"></i>
+            </button>
+            <button class="nav-btn" id="audioBtn" onclick="toggleAudio()" title="Áudio">
+                <i class="fas fa-volume-up"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- ========== CONTEÚDO PRINCIPAL ========== -->
+    <main class="main-content">
+        <!-- TIMELINE DA CITOLOGIA -->
+        <section class="timeline-section">
+            <h2 class="section-title">
+                <i class="fas fa-hourglass-half"></i>
+                História da Citologia
+            </h2>
+            <div class="timeline-container">
+                <div class="timeline-line"></div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">1665</div>
+                        <h3 class="timeline-title">Descoberta da Célula</h3>
+                        <p class="timeline-description">
+                            Robert Hooke observa células em cortiça utilizando um microscópio primitivo.
+                            Cunha o termo "célula" (do latim "cellula", pequeno compartimento).
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">1674</div>
+                        <h3 class="timeline-title">Primeiras Observações de Células Vivas</h3>
+                        <p class="timeline-description">
+                            Antonie van Leeuwenhoek observa organismos unicelulares em água de chuva.
+                            Descreve "animálculos" (protozoários e bactérias).
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">1839</div>
+                        <h3 class="timeline-title">Teoria Celular</h3>
+                        <p class="timeline-description">
+                            Matthias Schleiden e Theodor Schwann formulam a Teoria Celular:
+                            "Todos os seres vivos são compostos por células".
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">1858</div>
+                        <h3 class="timeline-title">Princípio da Continuidade Celular</h3>
+                        <p class="timeline-description">
+                            Rudolf Virchow propõe: "Omnis cellula e cellula" (toda célula provém de outra célula).
+                            Completa os princípios fundamentais da Teoria Celular.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">1931</div>
+                        <h3 class="timeline-title">Microscópio Eletrônico</h3>
+                        <p class="timeline-description">
+                            Ernst Ruska desenvolve o primeiro microscópio eletrônico.
+                            Permite visualização de estruturas subcelulares em alta resolução.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MICROSCÓPIO VIRTUAL -->
+        <section class="microscope-section">
+            <div class="microscope-header">
+                <h2 class="microscope-title">
+                    <i class="fas fa-microscope"></i>
+                    Microscópio Virtual
+                </h2>
+                <div class="controls">
+                    <button class="control-btn" onclick="resetMicroscope()">
+                        <i class="fas fa-redo"></i> Reiniciar
+                    </button>
+                    <button class="control-btn" onclick="toggleMicroscope()" id="microscopeToggle">
+                        <i class="fas fa-play"></i> Iniciar
+                    </button>
+                    <button class="control-btn" onclick="captureImage()">
+                        <i class="fas fa-camera"></i> Capturar
+                    </button>
+                </div>
+            </div>
+
+            <div class="microscope-body">
+                <div class="slide-selector">
+                    <h3 style="color: var(--cell-blue); margin-bottom: 20px;">Lâminas Disponíveis</h3>
+                    <div class="slide-option active" onclick="selectSlide('animal')">
+                        <div style="font-weight: 600; color: white; margin-bottom: 5px;">Célula Animal</div>
+                        <div style="font-size: 0.9rem; color: var(--text-secondary);">Células epiteliais da mucosa bucal</div>
+                    </div>
+                    <div class="slide-option" onclick="selectSlide('plant')">
+                        <div style="font-weight: 600; color: white; margin-bottom: 5px;">Célula Vegetal</div>
+                        <div style="font-size: 0.9rem; color: var(--text-secondary);">Células da epiderme da cebola</div>
+                    </div>
+                    <div class="slide-option" onclick="selectSlide('mitosis')">
+                        <div style="font-weight: 600; color: white; margin-bottom: 5px;">Mitose</div>
+                        <div style="font-size: 0.9rem; color: var(--text-secondary);">Raiz de cebola em divisão celular</div>
+                    </div>
+                    <div class="slide-option" onclick="selectSlide('bacteria')">
+                        <div style="font-weight: 600; color: white; margin-bottom: 5px;">Bactérias</div>
+                        <div style="font-size: 0.9rem; color: var(--text-secondary);">Cultura bacteriana Gram-positiva</div>
+                    </div>
+                </div>
+
+                <div class="slide-preview">
+                    <canvas id="microscopeCanvas" width="600" height="400" class="cell-canvas"></canvas>
+                    <div id="cellInfo" style="position: absolute; bottom: 15px; left: 15px; background: rgba(0,0,0,0.7); padding: 10px 15px; border-radius: 8px; color: white; font-size: 0.9rem;">
+                        Aumento: <span id="zoomValue">100x</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="microscope-controls">
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Aumento</span>
+                        <span class="control-value" id="magnificationValue">100x</span>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" class="slider" id="magnificationSlider" min="40" max="1000" value="100" oninput="updateMagnification(this.value)">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Foco</span>
+                        <span class="control-value" id="focusValue">Nítido</span>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" class="slider" id="focusSlider" min="0" max="100" value="50" oninput="updateFocus(this.value)">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Iluminação</span>
+                        <span class="control-value" id="lightValue">Média</span>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" class="slider" id="lightSlider" min="10" max="100" value="60" oninput="updateLight(this.value)">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ORGANELAS CELULARES -->
+        <section class="organelles-section">
+            <h2 class="section-title">
+                <i class="fas fa-shapes"></i>
+                Organelas Celulares
+            </h2>
+            
+            <div class="organelles-grid">
+                <div class="organelle-card nucleus" onclick="toggleOrganelleDetails(this)">
+                    <div class="organelle-icon">
+                        <i class="fas fa-dot-circle"></i>
+                    </div>
+                    <h3 class="organelle-title">Núcleo</h3>
+                    <p class="organelle-function">
+                        Controla todas as atividades celulares. Armazena o material genético (DNA) e coordena a síntese proteica.
+                    </p>
+                    <div class="organelle-details">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9rem;">
+                            <div>
+                                <strong style="color: var(--nucleus-red);">Estruturas:</strong>
+                                <div style="color: var(--text-secondary); margin-top: 5px;">
+                                    • Carioteca<br>
+                                    • Nucleoplasma<br>
+                                    • Nucléolo<br>
+                                    • Cromatina
+                                </div>
+                            </div>
+                            <div>
+                                <strong style="color: var(--nucleus-red);">Funções:</strong>
+                                <div style="color: var(--text-secondary); margin-top: 5px;">
+                                    • Controle genético<br>
+                                    • Divisão celular<br>
+                                    • Síntese de RNA<br>
+                                    • Replicação do DNA
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="organelle-card mitochondria" onclick="toggleOrganelleDetails(this)">
+                    <div class="organelle-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="organelle-title">Mitocôndria</h3>
+                    <p class="organelle-function">
+                        Responsável pela respiração celular. Produz ATP através da fosforilação oxidativa.
+                    </p>
+                    <div class="organelle-details">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9rem;">
+                            <div>
+                                <strong style="color: var(--mitochondria-green);">Estruturas:</strong>
+                                <div style="color: var(--text-secondary); margin-top: 5px;">
+                                    • Membrana externa<br>
+                                    • Membrana interna<br>
+                                    • Cristas mitocondriais<br>
+                                    • Matriz
+                                </div>
+                            </div>
+                            <div>
+                                <strong style="color: var(--mitochondria-green);">Funções:</strong>
+                                <div style="color: var(--text-secondary); margin-top: 5px;">
+                                    • Produção de ATP<br>
+                                    • Ciclo de Krebs<br>
+                                    • Cadeia transportadora<br>
+                                    • Apoptose
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="organelle-card golgi" onclick="toggleOrganelleDetails(this)">
+                    <div class="organelle-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h3 class="organelle-title">Complexo de Golgi</h3>
+                    <p class="organelle-function">
+                        Processa, modifica e embala proteínas para exportação ou uso intracelular.
+                    </p>
+                    <div class="organelle-details">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9rem;">
+                            <div>
+                                <strong style="color: var(--golgi-orange);">Estruturas:</strong>
+                                <div style="color: var(--text-secondary); margin-top: 5px;">
+                                    • Dictiossomos<br>
+                                    • Cisternas<br>
+                                    • Vesículas<br>
+                                    • Rede trans
+                                </div>
+                            </div>
+                            <div>
+                                <strong style="color: var(--golgi-orange);">Funções:</strong>
+                                <div style="color: var(--text-secondary); margin-top: 5px;">
+                                    • Glicosilação<br>
+                                    • Formação de lisossomos<br>
+                                    • Secreção celular<br>
+                                    • Formação do acrossoma
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="organelle-card er" onclick="toggleOrganelleDetails(this)">
+                    <div class="organelle-icon">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <h3 class="organelle-title">Retículo Endoplasmático</h3>
+                    <p class="organelle-function">
+                        Síntese de proteínas (RER) e lipídios (REL), além do transporte intracelular.
+                    </p>
+                    <div class="organelle-details">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9rem;">
+                            <div>
+                                <strong style="color: var(--er-indigo);">Tipos:</strong>
+                                <div style="color: var(--text-secondary); margin-top: 5px;">
+                                    • RER (com ribossomos)<br>
+                                    • REL (sem ribossomos)<br>
+                                    • Membranas cisternais<br>
+                                    • Lúmen
+                                </div>
+                            </div>
+                            <div>
+                                <strong style="color: var(--er-indigo);">Funções:</strong>
+                                <div style="color: var(--text-secondary); margin-top: 5px;">
+                                    • Síntese proteica<br>
+                                    • Síntese lipídica<br>
+                                    • Desintoxicação<br>
+                                    • Armazenamento de Ca²⁺
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONSTRUTOR DE CÉLULAS -->
+        <section class="cell-builder">
+            <h2 class="section-title">
+                <i class="fas fa-puzzle-piece"></i>
+                Construtor de Células
+            </h2>
+            
+            <div class="builder-area">
+                <div class="organelle-palette">
+                    <div class="palette-item" draggable="true" data-organelle="nucleus">
+                        <div class="palette-icon" style="color: var(--nucleus-red);">
+                            <i class="fas fa-dot-circle"></i>
+                        </div>
+                        <div class="palette-label">Núcleo</div>
+                    </div>
+                    <div class="palette-item" draggable="true" data-organelle="mitochondria">
+                        <div class="palette-icon" style="color: var(--mitochondria-green);">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="palette-label">Mitocôndria</div>
+                    </div>
+                    <div class="palette-item" draggable="true" data-organelle="golgi">
+                        <div class="palette-icon" style="color: var(--golgi-orange);">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <div class="palette-label">Golgi</div>
+                    </div>
+                    <div class="palette-item" draggable="true" data-organelle="er">
+                        <div class="palette-icon" style="color: var(--er-indigo);">
+                            <i class="fas fa-network-wired"></i>
+                        </div>
+                        <div class="palette-label">Retículo</div>
+                    </div>
+                    <div class="palette-item" draggable="true" data-organelle="ribosome">
+                        <div class="palette-icon" style="color: var(--lysosome-yellow);">
+                            <i class="fas fa-circle"></i>
+                        </div>
+                        <div class="palette-label">Ribossomo</div>
+                    </div>
+                    <div class="palette-item" draggable="true" data-organelle="lysosome">
+                        <div class="palette-icon" style="color: var(--cell-blue);">
+                            <i class="fas fa-droplet"></i>
+                        </div>
+                        <div class="palette-label">Lisossomo</div>
+                    </div>
+                </div>
+
+                <div class="cell-canvas-area" id="cellCanvasArea">
+                    <canvas id="cellCanvas" width="600" height="400"></canvas>
+                    <div class="cell-membrane"></div>
+                    <div id="droppedOrganelles" style="position: absolute; bottom: 15px; right: 15px; background: rgba(0,0,0,0.7); padding: 10px 15px; border-radius: 8px; color: white; font-size: 0.9rem;">
+                        Organelas: <span id="organelleCount">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cell-info">
+                <h3 style="color: var(--cell-blue); margin-bottom: 15px;">Informações da Célula</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
+                        <div style="font-size: 0.9rem; color: var(--text-secondary);">Tipo</div>
+                        <div style="font-weight: 600; color: white;" id="cellType">Animal</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
+                        <div style="font-size: 0.9rem; color: var(--text-secondary);">Organelas</div>
+                        <div style="font-weight: 600; color: white;" id="totalOrganelles">0</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
+                        <div style="font-size: 0.9rem; color: var(--text-secondary);">Status</div>
+                        <div style="font-weight: 600; color: var(--mitochondria-green);" id="cellStatus">Incompleta</div>
+                    </div>
+                </div>
+                <button class="control-btn" onclick="checkCell()" style="margin-top: 20px; width: 100%; justify-content: center;">
+                    <i class="fas fa-check"></i> Verificar Célula
+                </button>
+            </div>
+        </section>
+
+        <!-- QUIZ INTERATIVO -->
+        <section class="quiz-section" id="quizSection">
+            <h2 class="section-title">
+                <i class="fas fa-question-circle"></i>
+                Quiz de Citologia
+            </h2>
+            
+            <div class="quiz-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="quizProgress" style="width: 0%"></div>
+                </div>
+                <span id="questionCounter" style="color: var(--text-secondary); font-weight: 600;">Pergunta 1/5</span>
+            </div>
+
+            <div class="question-container" id="questionContainer">
+                <div class="question-text" id="questionText">
+                    Qual organela é responsável pela síntese de proteínas na célula?
+                </div>
+                
+                <div class="options-grid" id="optionsGrid">
+                    <!-- Opções serão preenchidas por JavaScript -->
+                </div>
+            </div>
+
+            <div class="quiz-navigation">
+                <button class="nav-btn-large" onclick="previousQuestion()" id="prevBtn" disabled>
+                    <i class="fas fa-arrow-left"></i> Anterior
+                </button>
+                <button class="nav-btn-large" onclick="nextQuestion()" id="nextBtn">
+                    Próxima <i class="fas fa-arrow-right"></i>
+                </button>
+                <button class="nav-btn-large" onclick="submitQuiz()" id="submitBtn" style="display: none;">
+                    <i class="fas fa-paper-plane"></i> Enviar Quiz
+                </button>
+            </div>
+        </section>
+
+        <!-- ANOTAÇÕES PESSOAIS -->
+        <section class="notes-section" id="notesSection">
+            <h2 class="section-title">
+                <i class="fas fa-edit"></i>
+                Suas Anotações
+            </h2>
+            
+            <div class="notes-container">
+                <textarea class="notes-editor" id="notesEditor" 
+                          placeholder="Escreva suas anotações sobre citologia aqui... Elas serão salvas automaticamente."></textarea>
+                <div class="notes-actions">
+                    <button class="control-btn" onclick="saveNotes()">
+                        <i class="fas fa-save"></i> Salvar Anotações
+                    </button>
+                    <button class="control-btn" onclick="clearNotes()">
+                        <i class="fas fa-trash"></i> Limpar Tudo
+                    </button>
+                    <button class="control-btn" onclick="exportNotes()">
+                        <i class="fas fa-download"></i> Exportar
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ========== MODAL DE GLOSSÁRIO ========== -->
+    <div class="modal" id="glossaryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-book"></i> Glossário de Citologia
+                </div>
+                <button class="modal-close" onclick="toggleGlossary()">&times;</button>
+            </div>
+            <div class="modal-body" id="glossaryContent">
+                <!-- Conteúdo será preenchido por JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== NOTIFICAÇÕES ========== -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // ========== VARIÁVEIS GLOBAIS ==========
+        let currentQuestion = 0;
+        let selectedAnswer = null;
+        let userProgress = {
+            timeline: [],
+            quiz: { score: 0, answers: [] },
+            notes: '',
+            completed: false,
+            microscope: { slides: [], observations: 0 },
+            cellBuilder: { organelles: [], completed: false }
+        };
+        
+        let audioEnabled = false;
+        let microscopeRunning = false;
+        let currentSlide = 'animal';
+        let droppedOrganelles = [];
+        let microscopeInterval = null;
+
+        // ========== INICIALIZAÇÃO ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("🔬 Capítulo 02 - Citologia inicializado!");
+            
+            // Criar fundo celular
+            createCellBackground();
+            
+            // Inicializar timeline
+            initTimeline();
+            
+            // Inicializar microscópio
+            initMicroscope();
+            
+            // Inicializar construtor de células
+            initCellBuilder();
+            
+            // Carregar progresso
+            loadProgress();
+            
+            // Inicializar quiz
+            initQuiz();
+            
+            // Inicializar glossário
+            initGlossary();
+            
+            // Configurar drag and drop
+            setupDragAndDrop();
+            
+            // Configurar auto-save
+            setupAutoSave();
+            
+            // Detectar Kodular
+            if (/Kodular|WebView|Android.*AppleWebKit/.test(navigator.userAgent)) {
+                optimizeForMobile();
+            }
+        });
+
+        // ========== FUNDO CELULAR ==========
+        function createCellBackground() {
+            const bg = document.getElementById('cellBackground');
+            
+            // Criar mitocôndrias
+            for (let i = 0; i < 8; i++) {
+                const mito = document.createElement('div');
+                mito.className = 'organelle mitochondria';
+                mito.style.left = `${Math.random() * 100}%`;
+                mito.style.top = `${Math.random() * 100}%`;
+                mito.style.animationDelay = `${Math.random() * 10}s`;
+                bg.appendChild(mito);
+            }
+            
+            // Criar ribossomos
+            for (let i = 0; i < 30; i++) {
+                const ribo = document.createElement('div');
+                ribo.className = 'organelle ribosome';
+                ribo.style.left = `${Math.random() * 100}%`;
+                ribo.style.top = `${Math.random() * 100}%`;
+                ribo.style.animationDelay = `${Math.random() * 5}s`;
+                bg.appendChild(ribo);
+            }
+            
+            // Criar vesículas
+            for (let i = 0; i = 12; i++) {
+                const vesicle = document.createElement('div');
+                vesicle.className = 'organelle vesicle';
+                vesicle.style.left = `${Math.random() * 100}%`;
+                vesicle.style.top = `${Math.random() * 100}%`;
+                vesicle.style.animationDelay = `${Math.random() * 8}s`;
+                bg.appendChild(vesicle);
+            }
+        }
+
+        // ========== NAVEGAÇÃO ==========
+        function goBackToIndex() {
+            if (confirm('Salvar progresso antes de sair?')) {
+                saveProgress();
+            }
+            window.location.href = 'index.html';
+        }
+
+        function toggleNotes() {
+            const notesSection = document.getElementById('notesSection');
+            notesSection.style.display = notesSection.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // ========== TIMELINE ==========
+        function initTimeline() {
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        const year = entry.target.querySelector('.timeline-year').textContent;
+                        if (!userProgress.timeline.includes(year)) {
+                            userProgress.timeline.push(year);
+                            saveProgress();
+                        }
+                    }
+                });
+            }, { threshold: 0.3 });
+            
+            timelineItems.forEach(item => observer.observe(item));
+        }
+
+        // ========== MICROSCÓPIO VIRTUAL ==========
+        function initMicroscope() {
+            const canvas = document.getElementById('microscopeCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Ajustar canvas para alta resolução
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = 600 * dpr;
+            canvas.height = 400 * dpr;
+            ctx.scale(dpr, dpr);
+            
+            drawCell('animal');
+        }
+
+        function drawCell(type) {
+            const canvas = document.getElementById('microscopeCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Fundo do microscópio
+            ctx.fillStyle = '#0a0a16';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Desenhar célula baseada no tipo
+            switch(type) {
+                case 'animal':
+                    drawAnimalCell(ctx);
+                    break;
+                case 'plant':
+                    drawPlantCell(ctx);
+                    break;
+                case 'mitosis':
+                    drawMitosisCell(ctx);
+                    break;
+                case 'bacteria':
+                    drawBacteria(ctx);
+                    break;
+            }
+            
+            // Adicionar efeito de grade do microscópio
+            drawMicroscopeGrid(ctx);
+        }
+
+        function drawAnimalCell(ctx) {
+            const centerX = 300;
+            const centerY = 200;
+            const radius = 120;
+            
+            // Membrana celular
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(139, 92, 246, 0.7)';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            
+            // Núcleo
+            ctx.beginPath();
+            ctx.arc(centerX - 30, centerY - 20, 40, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(239, 68, 68, 0.4)';
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(239, 68, 68, 0.8)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Nucléolo
+            ctx.beginPath();
+            ctx.arc(centerX - 30, centerY - 20, 12, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(239, 68, 68, 0.6)';
+            ctx.fill();
+            
+            // Mitocôndrias
+            for (let i = 0; i < 5; i++) {
+                const angle = (i / 5) * Math.PI * 2;
+                const x = centerX + Math.cos(angle) * 60;
+                const y = centerY + Math.sin(angle) * 60;
+                
+                ctx.beginPath();
+                ctx.ellipse(x, y, 15, 8, angle, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(16, 185, 129, 0.5)';
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(16, 185, 129, 0.8)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
+            
+            // Retículo endoplasmático
+            ctx.beginPath();
+            for (let i = 0; i < 10; i++) {
+                const x = centerX + Math.sin(i * 0.5) * 40;
+                const y = centerY + Math.cos(i * 0.5) * 40;
+                ctx.lineTo(x, y);
+            }
+            ctx.strokeStyle = 'rgba(99, 102, 241, 0.6)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Ribossomos (pontos)
+            for (let i = 0; i < 20; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const dist = Math.random() * 80;
+                const x = centerX + Math.cos(angle) * dist;
+                const y = centerY + Math.sin(angle) * dist;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(245, 158, 11, 0.8)';
+                ctx.fill();
+            }
+        }
+
+        function drawMicroscopeGrid(ctx) {
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.lineWidth = 1;
+            
+            // Grade horizontal
+            for (let i = 0; i < 600; i += 40) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, 400);
+                ctx.stroke();
+            }
+            
+            // Grade vertical
+            for (let i = 0; i < 400; i += 40) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(600, i);
+                ctx.stroke();
+            }
+            
+            // Marcador de escala
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(500, 350);
+            ctx.lineTo(550, 350);
+            ctx.stroke();
+            
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.font = '12px Arial';
+            ctx.fillText('10µm', 515, 340);
+        }
+
+        function selectSlide(slideType) {
+            currentSlide = slideType;
+            
+            // Atualizar seleção visual
+            document.querySelectorAll('.slide-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            event.target.closest('.slide-option').classList.add('active');
+            
+            // Registrar no progresso
+            if (!userProgress.microscope.slides.includes(slideType)) {
+                userProgress.microscope.slides.push(slideType);
+                userProgress.microscope.observations++;
+                saveProgress();
+            }
+            
+            // Atualizar desenho
+            drawCell(slideType);
+            
+            showNotification(`Lâmina selecionada: ${getSlideName(slideType)}`, 'info');
+        }
+
+        function getSlideName(slideType) {
+            const names = {
+                'animal': 'Célula Animal',
+                'plant': 'Célula Vegetal',
+                'mitosis': 'Mitose',
+                'bacteria': 'Bactérias'
+            };
+            return names[slideType] || 'Desconhecida';
+        }
+
+        function toggleMicroscope() {
+            microscopeRunning = !microscopeRunning;
+            const btn = document.getElementById('microscopeToggle');
+            
+            if (microscopeRunning) {
+                btn.innerHTML = '<i class="fas fa-pause"></i> Pausar';
+                btn.style.background = 'rgba(239, 68, 68, 0.1)';
+                btn.style.borderColor = 'var(--nucleus-red)';
+                btn.style.color = 'var(--nucleus-red)';
+                
+                // Iniciar animação
+                microscopeInterval = setInterval(animateMicroscope, 100);
+                showNotification('Microscópio em operação', 'success');
+            } else {
+                btn.innerHTML = '<i class="fas fa-play"></i> Iniciar';
+                btn.style.background = 'rgba(14, 165, 233, 0.1)';
+                btn.style.borderColor = 'var(--cell-blue)';
+                btn.style.color = 'var(--cell-blue)';
+                
+                // Parar animação
+                clearInterval(microscopeInterval);
+                showNotification('Microscópio pausado', 'warning');
+            }
+        }
+
+        function animateMicroscope() {
+            // Adicionar animação sutil ao microscópio
+            const canvas = document.getElementById('microscopeCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Adicionar partículas em movimento
+            for (let i = 0; i < 5; i++) {
+                const x = Math.random() * 600;
+                const y = Math.random() * 400;
+                const radius = 1 + Math.random() * 2;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(14, 165, 233, ${0.3 + Math.random() * 0.3})`;
+                ctx.fill();
+            }
+        }
+
+        function resetMicroscope() {
+            microscopeRunning = false;
+            clearInterval(microscopeInterval);
+            
+            const btn = document.getElementById('microscopeToggle');
+            btn.innerHTML = '<i class="fas fa-play"></i> Iniciar';
+            btn.style.background = 'rgba(14, 165, 233, 0.1)';
+            btn.style.borderColor = 'var(--cell-blue)';
+            btn.style.color = 'var(--cell-blue)';
+            
+            // Resetar controles
+            document.getElementById('magnificationSlider').value = 100;
+            document.getElementById('focusSlider').value = 50;
+            document.getElementById('lightSlider').value = 60;
+            
+            updateMagnification(100);
+            updateFocus(50);
+            updateLight(60);
+            
+            drawCell(currentSlide);
+            showNotification('Microscópio reiniciado', 'info');
+        }
+
+        function updateMagnification(value) {
+            const zoom = parseInt(value);
+            document.getElementById('magnificationValue').textContent = `${zoom}x`;
+            document.getElementById('zoomValue').textContent = `${zoom}x`;
+            
+            // Atualizar tamanho dos elementos no canvas
+            const scale = zoom / 100;
+            const canvas = document.getElementById('microscopeCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Redesenhar célula com novo zoom
+            drawCell(currentSlide);
+            
+            // Adicionar efeito de zoom
+            if (zoom > 200) {
+                ctx.filter = 'contrast(1.2) brightness(1.1)';
+            } else {
+                ctx.filter = 'none';
+            }
+        }
+
+        function updateFocus(value) {
+            const focus = parseInt(value);
+            let focusText = 'Desfocado';
+            
+            if (focus > 70) focusText = 'Nítido';
+            else if (focus > 40) focusText = 'Foco médio';
+            else if (focus > 20) focusText = 'Pouco foco';
+            
+            document.getElementById('focusValue').textContent = focusText;
+            
+            // Aplicar efeito de desfoque visual
+            const canvas = document.getElementById('microscopeCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            if (focus < 30) {
+                ctx.filter = 'blur(3px)';
+            } else if (focus < 60) {
+                ctx.filter = 'blur(1px)';
+            } else {
+                ctx.filter = 'none';
+            }
+            
+            drawCell(currentSlide);
+        }
+
+        function updateLight(value) {
+            const light = parseInt(value);
+            let lightText = 'Baixa';
+            
+            if (light > 70) lightText = 'Alta';
+            else if (light > 40) lightText = 'Média';
+            
+            document.getElementById('lightValue').textContent = lightText;
+            
+            // Aplicar efeito de brilho
+            const canvas = document.getElementById('microscopeCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            const brightness = 0.5 + (light / 100);
+            ctx.filter = `brightness(${brightness})`;
+            
+            drawCell(currentSlide);
+        }
+
+        function captureImage() {
+            const canvas = document.getElementById('microscopeCanvas');
+            const link = document.createElement('a');
+            link.download = `citologia_microscopio_${currentSlide}_${new Date().getTime()}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            showNotification('Imagem capturada e salva!', 'success');
+        }
+
+        // ========== ORGANELAS INTERATIVAS ==========
+        function toggleOrganelleDetails(card) {
+            const details = card.querySelector('.organelle-details');
+            details.classList.toggle('active');
+            
+            // Registrar no progresso
+            const organelle = card.querySelector('.organelle-title').textContent;
+            if (!userProgress.organellesViewed) {
+                userProgress.organellesViewed = [];
+            }
+            if (!userProgress.organellesViewed.includes(organelle)) {
+                userProgress.organellesViewed.push(organelle);
+                saveProgress();
+            }
+        }
+
+        // ========== CONSTRUTOR DE CÉLULAS ==========
+        function initCellBuilder() {
+            const canvas = document.getElementById('cellCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Ajustar canvas
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = 600 * dpr;
+            canvas.height = 400 * dpr;
+            ctx.scale(dpr, dpr);
+            
+            drawEmptyCell();
+        }
+
+        function drawEmptyCell() {
+            const canvas = document.getElementById('cellCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Limpar canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Membrana celular
+            ctx.beginPath();
+            ctx.arc(300, 200, 140, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(139, 92, 246, 0.5)';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            
+            // Citoplasma
+            ctx.beginPath();
+            ctx.arc(300, 200, 138, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(14, 165, 233, 0.05)';
+            ctx.fill();
+        }
+
+        function setupDragAndDrop() {
+            const paletteItems = document.querySelectorAll('.palette-item');
+            const canvasArea = document.getElementById('cellCanvasArea');
+            
+            paletteItems.forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', item.dataset.organelle);
+                    item.style.opacity = '0.5';
+                });
+                
+                item.addEventListener('dragend', () => {
+                    item.style.opacity = '1';
+                });
+            });
+            
+            canvasArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                canvasArea.style.borderColor = 'var(--cell-blue)';
+                canvasArea.style.background = 'rgba(14, 165, 233, 0.05)';
+            });
+            
+            canvasArea.addEventListener('dragleave', () => {
+                canvasArea.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                canvasArea.style.background = 'rgba(0, 0, 0, 0.3)';
+            });
+            
+            canvasArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                canvasArea.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                canvasArea.style.background = 'rgba(0, 0, 0, 0.3)';
+                
+                const organelleType = e.dataTransfer.getData('text/plain');
+                if (organelleType) {
+                    addOrganelleToCell(organelleType, e.offsetX, e.offsetY);
+                }
+            });
+        }
+
+        function addOrganelleToCell(type, x, y) {
+            droppedOrganelles.push({ type, x, y });
+            
+            // Atualizar contador
+            document.getElementById('organelleCount').textContent = droppedOrganelles.length;
+            document.getElementById('totalOrganelles').textContent = droppedOrganelles.length;
+            
+            // Desenhar organela
+            drawOrganelle(type, x, y);
+            
+            // Verificar se célula está completa
+            checkCellCompletion();
+            
+            showNotification(`${getOrganelleName(type)} adicionada à célula`, 'success');
+        }
+
+        function getOrganelleName(type) {
+            const names = {
+                'nucleus': 'Núcleo',
+                'mitochondria': 'Mitocôndria',
+                'golgi': 'Complexo de Golgi',
+                'er': 'Retículo Endoplasmático',
+                'ribosome': 'Ribossomo',
+                'lysosome': 'Lisossomo'
+            };
+            return names[type] || 'Organela';
+        }
+
+        function drawOrganelle(type, x, y) {
+            const canvas = document.getElementById('cellCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Cores por tipo
+            const colors = {
+                'nucleus': { fill: 'rgba(239, 68, 68, 0.4)', stroke: 'rgba(239, 68, 68, 0.8)' },
+                'mitochondria': { fill: 'rgba(16, 185, 129, 0.4)', stroke: 'rgba(16, 185, 129, 0.8)' },
+                'golgi': { fill: 'rgba(249, 115, 22, 0.4)', stroke: 'rgba(249, 115, 22, 0.8)' },
+                'er': { fill: 'rgba(99, 102, 241, 0.4)', stroke: 'rgba(99, 102, 241, 0.8)' },
+                'ribosome': { fill: 'rgba(245, 158, 11, 0.6)', stroke: 'rgba(245, 158, 11, 0.9)' },
+                'lysosome': { fill: 'rgba(14, 165, 233, 0.4)', stroke: 'rgba(14, 165, 233, 0.8)' }
+            };
+            
+            const color = colors[type] || colors.ribosome;
+            const size = getOrganelleSize(type);
+            
+            // Desenhar forma baseada no tipo
+            switch(type) {
+                case 'nucleus':
+                    ctx.beginPath();
+                    ctx.arc(x, y, size, 0, Math.PI * 2);
+                    ctx.fillStyle = color.fill;
+                    ctx.fill();
+                    ctx.strokeStyle = color.stroke;
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    
+                    // Nucléolo
+                    ctx.beginPath();
+                    ctx.arc(x, y, size/3, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(239, 68, 68, 0.6)';
+                    ctx.fill();
+                    break;
+                    
+                case 'mitochondria':
+                    ctx.beginPath();
+                    ctx.ellipse(x, y, size, size/2, Math.PI/4, 0, Math.PI * 2);
+                    ctx.fillStyle = color.fill;
+                    ctx.fill();
+                    ctx.strokeStyle = color.stroke;
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+                    break;
+                    
+                case 'ribosome':
+                case 'lysosome':
+                    ctx.beginPath();
+                    ctx.arc(x, y, size, 0, Math.PI * 2);
+                    ctx.fillStyle = color.fill;
+                    ctx.fill();
+                    ctx.strokeStyle = color.stroke;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    break;
+                    
+                default:
+                    // Forma genérica para outras organelas
+                    ctx.beginPath();
+                    ctx.arc(x, y, size, 0, Math.PI * 2);
+                    ctx.fillStyle = color.fill;
+                    ctx.fill();
+                    ctx.strokeStyle = color.stroke;
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+            }
+        }
+
+        function getOrganelleSize(type) {
+            const sizes = {
+                'nucleus': 35,
+                'mitochondria': 20,
+                'golgi': 25,
+                'er': 20,
+                'ribosome': 5,
+                'lysosome': 10
+            };
+            return sizes[type] || 15;
+        }
+
+        function checkCellCompletion() {
+            const required = ['nucleus', 'mitochondria'];
+            const hasRequired = required.every(org => 
+                droppedOrganelles.some(o => o.type === org)
+            );
+            
+            if (hasRequired && droppedOrganelles.length >= 4) {
+                document.getElementById('cellStatus').textContent = 'Completa';
+                document.getElementById('cellStatus').style.color = 'var(--mitochondria-green)';
+                userProgress.cellBuilder.completed = true;
+                saveProgress();
+            } else {
+                document.getElementById('cellStatus').textContent = 'Incompleta';
+                document.getElementById('cellStatus').style.color = 'var(--nucleus-red)';
+            }
+        }
+
+        function checkCell() {
+            if (userProgress.cellBuilder.completed) {
+                showNotification('✅ Célula completa! Todas as organelas essenciais estão presentes.', 'success');
+            } else {
+                showNotification('⚠️ Célula incompleta. Adicione núcleo, mitocôndrias e outras organelas.', 'warning');
+            }
+        }
+
+        // ========== QUIZ INTERATIVO ==========
+        const quizQuestions = [
+            {
+                question: "Qual organela é responsável pela síntese de proteínas na célula?",
+                options: [
+                    "Mitocôndria",
+                    "Retículo endoplasmático rugoso",
+                    "Complexo de Golgi",
+                    "Lisossomo"
+                ],
+                correct: 1,
+                explanation: "O retículo endoplasmático rugoso (RER) possui ribossomos aderidos à sua superfície, sendo responsável pela síntese de proteínas."
+            },
+            {
+                question: "Qual organela é conhecida como 'usina energética' da célula?",
+                options: [
+                    "Núcleo",
+                    "Mitocôndria",
+                    "Cloroplasto",
+                    "Ribossomo"
+                ],
+                correct: 1,
+                explanation: "A mitocôndria é responsável pela produção de ATP através da respiração celular, sendo considerada a usina energética da célula."
+            },
+            {
+                question: "Qual estrutura é exclusiva das células vegetais?",
+                options: [
+                    "Mitocôndria",
+                    "Parede celular",
+                    "Núcleo",
+                    "Retículo endoplasmático"
+                ],
+                correct: 1,
+                explanation: "A parede celular, composta principalmente por celulose, é uma estrutura exclusiva das células vegetais, proporcionando suporte e proteção."
+            },
+            {
+                question: "O que são células procarióticas?",
+                options: [
+                    "Células com núcleo definido",
+                    "Células sem núcleo definido",
+                    "Células exclusivamente vegetais",
+                    "Células exclusivamente animais"
+                ],
+                correct: 1,
+                explanation: "Células procarióticas não possuem núcleo definido (carioteca) e seu material genético está disperso no citoplasma. Exemplo: bactérias."
+            },
+            {
+                question: "Qual organela contém enzimas digestivas para decompor materiais?",
+                options: [
+                    "Ribossomo",
+                    "Mitocôndria",
+                    "Lisossomo",
+                    "Complexo de Golgi"
+                ],
+                correct: 2,
+                explanation: "Os lisossomos são organelas que contêm enzimas digestivas (hidrolases) responsáveis pela digestão intracelular e reciclagem de componentes celulares."
+            }
+        ];
+
+        function initQuiz() {
+            loadQuestion(currentQuestion);
+        }
+
+        function loadQuestion(index) {
+            const question = quizQuestions[index];
+            
+            // Atualizar contador
+            document.getElementById('questionCounter').textContent = 
+                `Pergunta ${index + 1}/${quizQuestions.length}`;
+            
+            // Atualizar barra de progresso
+            const progress = ((index) / quizQuestions.length) * 100;
+            document.getElementById('quizProgress').style.width = `${progress}%`;
+            
+            // Atualizar texto da pergunta
+            document.getElementById('questionText').textContent = question.question;
+            
+            // Limpar opções anteriores
+            const optionsGrid = document.getElementById('optionsGrid');
+            optionsGrid.innerHTML = '';
+            
+            // Adicionar novas opções
+            question.options.forEach((option, i) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.textContent = option;
+                optionDiv.dataset.index = i;
+                optionDiv.onclick = () => selectOption(optionDiv, i);
+                optionsGrid.appendChild(optionDiv);
+            });
+            
+            // Atualizar botões de navegação
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').style.display = 
+                index === quizQuestions.length - 1 ? 'none' : 'block';
+            document.getElementById('submitBtn').style.display = 
+                index === quizQuestions.length - 1 ? 'block' : 'none';
+            
+            // Restaurar resposta selecionada anteriormente
+            if (userProgress.quiz.answers[index] !== undefined) {
+                const previousAnswer = userProgress.quiz.answers[index];
+                const options = document.querySelectorAll('.option');
+                options[previousAnswer.selected].classList.add('selected');
+                if (previousAnswer.correct !== undefined) {
+                    options[previousAnswer.selected].classList.add(
+                        previousAnswer.correct ? 'correct' : 'incorrect'
+                    );
+                    options[question.correct].classList.add('correct');
+                }
+            }
+            
+            selectedAnswer = userProgress.quiz.answers[index]?.selected;
+        }
+
+        function selectOption(optionDiv, index) {
+            // Só permitir seleção se ainda não foi verificada
+            const question = quizQuestions[currentQuestion];
+            const alreadyAnswered = userProgress.quiz.answers[currentQuestion]?.correct !== undefined;
+            
+            if (alreadyAnswered) return;
+            
+            // Remover seleção anterior
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Selecionar nova opção
+            optionDiv.classList.add('selected');
+            selectedAnswer = index;
+            
+            // Salvar resposta
+            if (!userProgress.quiz.answers[currentQuestion]) {
+                userProgress.quiz.answers[currentQuestion] = {
+                    selected: index,
+                    correct: index === question.correct
+                };
+            } else {
+                userProgress.quiz.answers[currentQuestion].selected = index;
+                userProgress.quiz.answers[currentQuestion].correct = index === question.correct;
+            }
+            
+            saveProgress();
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < quizQuestions.length - 1) {
+                currentQuestion++;
+                loadQuestion(currentQuestion);
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion(currentQuestion);
+            }
+        }
+
+        function submitQuiz() {
+            // Calcular pontuação
+            let score = 0;
+            userProgress.quiz.answers.forEach(answer => {
+                if (answer && answer.correct) {
+                    score++;
+                }
+            });
+            
+            userProgress.quiz.score = score;
+            userProgress.completed = true;
+            saveProgress();
+            
+            // Mostrar resultados
+            showNotification(`Quiz completo! Pontuação: ${score}/${quizQuestions.length}`, 'success');
+            
+            // Destacar respostas corretas/incorretas
+            const question = quizQuestions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach((opt, i) => {
+                if (i === question.correct) {
+                    opt.classList.add('correct');
+                } else if (userProgress.quiz.answers[currentQuestion]?.selected === i) {
+                    opt.classList.add('incorrect');
+                }
+            });
+            
+            // Desabilitar botão de envio
+            document.getElementById('submitBtn').disabled = true;
+        }
+
+        // ========== GLOSSÁRIO ==========
+        const glossary = {
+            'Citologia': 'Ramo da biologia que estuda as células, sua estrutura, função e importância nos seres vivos.',
+            'Célula': 'Unidade fundamental dos seres vivos. Pode ser procariótica (sem núcleo) ou eucariótica (com núcleo).',
+            'Organela': 'Estruturas especializadas dentro da célula que desempenham funções específicas.',
+            'Membrana Plasmática': 'Envoltório celular que controla a entrada e saída de substâncias.',
+            'Citoplasma': 'Conteúdo interno da célula, onde estão as organelas e ocorrem as reações metabólicas.',
+            'Núcleo': 'Organela que contém o material genético (DNA) e controla as atividades celulares.',
+            'Mitocôndria': 'Organela responsável pela respiração celular e produção de ATP.',
+            'Ribossomo': 'Estrutura responsável pela síntese de proteínas.',
+            'Retículo Endoplasmático': 'Sistema de membranas envolvido na síntese e transporte de substâncias.',
+            'Complexo de Golgi': 'Organela que modifica, empacota e distribui proteínas.',
+            'Lisossomo': 'Organela que contém enzimas digestivas para decomposição de materiais.',
+            'Cloroplasto': 'Organela fotossintetizante exclusiva de células vegetais.',
+            'Parede Celular': 'Estrutura de sustentação externa à membrana plasmática em células vegetais.',
+            'Citoesqueleto': 'Rede de filamentos que dá forma e sustentação à célula.',
+            'Vacúolo': 'Organela de armazenamento, maior em células vegetais.'
+        };
+
+        function initGlossary() {
+            const glossaryContent = document.getElementById('glossaryContent');
+            glossaryContent.innerHTML = '';
+            
+            Object.entries(glossary).forEach(([term, definition]) => {
+                const termDiv = document.createElement('div');
+                termDiv.style.cssText = `
+                    background: rgba(255,255,255,0.05);
+                    border-radius: 10px;
+                    padding: 15px;
+                    margin-bottom: 10px;
+                    border-left: 4px solid var(--cell-blue);
+                    transition: all 0.3s ease;
+                `;
+                
+                termDiv.innerHTML = `
+                    <div style="color: var(--cell-blue); font-weight: 700; margin-bottom: 5px; font-size: 1.1rem;">
+                        ${term}
+                    </div>
+                    <div style="color: rgba(255,255,255,0.8); font-size: 0.95rem; line-height: 1.5;">
+                        ${definition}
+                    </div>
+                `;
+                
+                termDiv.addEventListener('mouseenter', () => {
+                    termDiv.style.transform = 'translateX(5px)';
+                    termDiv.style.background = 'rgba(14, 165, 233, 0.1)';
+                });
+                
+                termDiv.addEventListener('mouseleave', () => {
+                    termDiv.style.transform = 'translateX(0)';
+                    termDiv.style.background = 'rgba(255,255,255,0.05)';
+                });
+                
+                glossaryContent.appendChild(termDiv);
+            });
+        }
+
+        function toggleGlossary() {
+            const modal = document.getElementById('glossaryModal');
+            modal.classList.toggle('active');
+        }
+
+        // ========== ANOTAÇÕES ==========
+        function saveNotes() {
+            const notes = document.getElementById('notesEditor').value;
+            userProgress.notes = notes;
+            saveProgress();
+            showNotification('Anotações salvas com sucesso!', 'success');
+        }
+
+        function clearNotes() {
+            if (confirm('Limpar todas as anotações?')) {
+                document.getElementById('notesEditor').value = '';
+                userProgress.notes = '';
+                saveProgress();
+                showNotification('Anotações limpas!', 'info');
+            }
+        }
+
+        function exportNotes() {
+            const notes = document.getElementById('notesEditor').value;
+            if (!notes.trim()) {
+                showNotification('Não há anotações para exportar', 'warning');
+                return;
+            }
+            
+            const blob = new Blob([notes], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `citologia_anotacoes_${new Date().toISOString().slice(0,10)}.txt`;
+            a.click();
+            showNotification('Anotações exportadas com sucesso!', 'success');
+        }
+
+        // ========== PROGRESSO E PERSISTÊNCIA ==========
+        function loadProgress() {
+            const saved = localStorage.getItem('biolomemo_chapter02');
+            if (saved) {
+                try {
+                    userProgress = JSON.parse(saved);
+                    
+                    // Restaurar anotações
+                    if (userProgress.notes) {
+                        document.getElementById('notesEditor').value = userProgress.notes;
+                    }
+                    
+                    // Restaurar quiz
+                    if (userProgress.quiz.answers.length > 0) {
+                        currentQuestion = userProgress.quiz.answers.length - 1;
+                        if (currentQuestion >= quizQuestions.length) {
+                            currentQuestion = quizQuestions.length - 1;
+                        }
+                        loadQuestion(currentQuestion);
+                    }
+                    
+                    // Restaurar construtor de células
+                    if (userProgress.cellBuilder.organelles) {
+                        droppedOrganelles = userProgress.cellBuilder.organelles;
+                        document.getElementById('organelleCount').textContent = droppedOrganelles.length;
+                        document.getElementById('totalOrganelles').textContent = droppedOrganelles.length;
+                        checkCellCompletion();
+                        
+                        // Redesenhar organelas
+                        droppedOrganelles.forEach(org => {
+                            drawOrganelle(org.type, org.x, org.y);
+                        });
+                    }
+                    
+                    console.log('Progresso do capítulo 02 carregado');
+                } catch (e) {
+                    console.error('Erro ao carregar progresso:', e);
+                }
+            }
+        }
+
+        function saveProgress() {
+            // Salvar organelas do construtor
+            userProgress.cellBuilder.organelles = droppedOrganelles;
+            
+            try {
+                localStorage.setItem('biolomemo_chapter02', JSON.stringify(userProgress));
+                console.log('Progresso salvo:', userProgress);
+            } catch (e) {
+                console.error('Erro ao salvar progresso:', e);
+            }
+        }
+
+        function setupAutoSave() {
+            setInterval(saveProgress, 30000); // Salvar a cada 30 segundos
+        }
+
+        // ========== NOTIFICAÇÕES ==========
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification ' + type;
+            
+            // Adicionar ícone baseado no tipo
+            let icon = 'ℹ️';
+            if (type === 'success') icon = '✅';
+            else if (type === 'error') icon = '❌';
+            else if (type === 'warning') icon = '⚠️';
+            
+            notification.innerHTML = `${icon} ${message}`;
+            notification.classList.add('show');
+            
+            // Remover após 4 segundos
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+
+        // ========== ÁUDIO ==========
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            const btn = document.getElementById('audioBtn');
+            btn.className = audioEnabled ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+            btn.title = audioEnabled ? 'Desativar áudio' : 'Ativar áudio';
+            
+            showNotification(audioEnabled ? 'Áudio ativado' : 'Áudio desativado', 'info');
+        }
+
+        // ========== OTIMIZAÇÃO MOBILE ==========
+        function optimizeForMobile() {
+            console.log('📱 Aplicando otimizações para dispositivos móveis...');
+            
+            // Aumentar áreas de toque
+            document.querySelectorAll('button, .option, .slide-option, .organelle-card, .palette-item').forEach(el => {
+                el.style.minHeight = '44px';
+                el.style.minWidth = '44px';
+            });
+            
+            // Habilitar scroll suave
+            document.documentElement.style.cssText += `
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior: none;
+                touch-action: manipulation;
+            `;
+            
+            // Forçar fullscreen se possível
+            setTimeout(() => {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                }
+            }, 1000);
+            
+            // Ajustar canvas para mobile
+            const canvases = document.querySelectorAll('canvas');
+            canvases.forEach(canvas => {
+                canvas.style.width = '100%';
+                canvas.style.height = 'auto';
+            });
+        }
+
+        // ========== EVENTOS DE TECLADO ==========
+        document.addEventListener('keydown', (e) => {
+            // Ctrl+S para salvar
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                saveProgress();
+                showNotification('Progresso salvo!', 'success');
+            }
+            
+            // Esc para sair do glossário ou voltar
+            if (e.key === 'Escape') {
+                const glossaryModal = document.getElementById('glossaryModal');
+                if (glossaryModal.classList.contains('active')) {
+                    toggleGlossary();
+                } else {
+                    goBackToIndex();
+                }
+            }
+            
+            // Setas para navegar no quiz
+            if (document.getElementById('quizSection').style.display !== 'none') {
+                if (e.key === 'ArrowRight') {
+                    nextQuestion();
+                } else if (e.key === 'ArrowLeft') {
+                    previousQuestion();
+                } else if (e.key >= '1' && e.key <= '4') {
+                    const index = parseInt(e.key) - 1;
+                    const options = document.querySelectorAll('.option');
+                    if (options[index]) {
+                        selectOption(options[index], index);
+                    }
+                }
+            }
+        });
+
+        // ========== INICIALIZAR APÓS CARREGAMENTO ==========
+        window.onload = function() {
+            setTimeout(() => {
+                showNotification('Bem-vindo ao Capítulo 02: Citologia! Explore as células interativamente.', 'info');
+            }, 1500);
+        };
+    </script>
+</body>
+</html>
