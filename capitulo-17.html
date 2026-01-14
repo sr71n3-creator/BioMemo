@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Capítulo 17 • Plantae - BIOLOMEMO</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css">
+    
+    <style>
+        :root {
+            --primary-blue: #0ea5e9;
+            --primary-purple: #8b5cf6;
+            --primary-green: #10b981;
+            --primary-red: #ef4444;
+            --primary-yellow: #f59e0b;
+            --dark-bg: #0a0a16;
+            --dark-panel: #151530;
+            --dark-border: rgba(14, 165, 233, 0.3);
+            --light-text: #ffffff;
+            --dim-text: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(20, 20, 40, 0.8);
+            --main-gradient: linear-gradient(45deg, #0ea5e9, #8b5cf6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        html {
+            font-size: 16px;
+            height: -webkit-fill-available;
+        }
+
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: var(--dark-bg);
+            color: var(--light-text);
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            overflow-x: hidden;
+            position: relative;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        }
+
+        .mobile-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(14, 165, 233, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 40%),
+                linear-gradient(180deg, #0a0a16 0%, #0f0f25 100%);
+            overflow: hidden;
+        }
+
+        .floating-particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--primary-blue);
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: floatUp 15s infinite linear;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-100px) translateX(20px); opacity: 0; }
+        }
+
+        .mobile-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 10, 22, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--dark-border);
+            z-index: 1000;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 60px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid var(--dark-border);
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:active { transform: scale(0.95); background: rgba(14, 165, 233, 0.2); }
+
+        .chapter-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chapter-number {
+            font-size: 0.85rem;
+            color: var(--primary-blue);
+            font-weight: 600;
+            letter-spacing: 1.5px;
+        }
+
+        .chapter-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary-blue), var(--primary-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 8px;
+        }
+
+        .header-action {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(20, 20, 40, 0.8);
+            border: 1px solid var(--dark-border);
+            color: var(--dim-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+        }
+
+        .header-action:active { transform: scale(0.95); background: rgba(14, 165, 233, 0.2); color: var(--primary-blue); }
+
+        .main-content {
+            margin-top: 60px;
+            padding-bottom: 80px;
+            min-height: calc(100vh - 140px);
+        }
+
+        .section-swiper {
+            width: 100%;
+            height: calc(100vh - 140px);
+        }
+
+        .swiper-slide {
+            padding: 20px 15px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            height: 100%;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--light-text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-blue);
+        }
+
+        .section-title i { color: var(--primary-blue); }
+
+        .content-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--dark-border);
+            backdrop-filter: blur(10px);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .content-card:active { transform: scale(0.99); border-color: var(--primary-blue); }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .card-action {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--dim-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .card-action:active { background: rgba(14, 165, 233, 0.2); color: var(--primary-blue); }
+
+        .card-body {
+            color: var(--dim-text);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .editable-content {
+            width: 100%;
+            min-height: 100px;
+            background: transparent;
+            border: none;
+            color: var(--light-text);
+            font-family: 'Exo 2', sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            resize: vertical;
+            outline: none;
+            padding: 10px 0;
+        }
+
+        .editable-content:focus {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .memory-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid var(--dark-border);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .memory-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--main-gradient);
+        }
+
+        .memory-card:active { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(14, 165, 233, 0.2); }
+        .memory-card.completed { border-color: var(--primary-green); }
+        .memory-card.completed::before { background: var(--primary-green); }
+
+        .memory-icon {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--primary-blue);
+        }
+
+        .memory-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--light-text);
+        }
+
+        .memory-desc {
+            font-size: 0.9rem;
+            color: var(--dim-text);
+            line-height: 1.5;
+        }
+
+        .mobile-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 10, 22, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--dark-border);
+            z-index: 1000;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-tabs {
+            display: flex;
+            gap: 5px;
+            width: 100%;
+        }
+
+        .footer-tab {
+            flex: 1;
+            height: 50px;
+            border-radius: 12px;
+            background: transparent;
+            border: none;
+            color: var(--dim-text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.8rem;
+            gap: 4px;
+        }
+
+        .footer-tab i { font-size: 1.2rem; }
+        .footer-tab.active { background: rgba(14, 165, 233, 0.15); color: var(--primary-blue); }
+        .footer-tab:active { background: rgba(14, 165, 233, 0.25); }
+
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(20, 20, 40, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--dark-border);
+            border-left: 4px solid var(--primary-green);
+            border-radius: 12px;
+            padding: 15px 20px;
+            max-width: 90%;
+            z-index: 3000;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            button, .card-action, .memory-card {
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-bg" id="mobileBg"></div>
+
+    <header class="mobile-header">
+        <div class="header-left">
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="chapter-info">
+                <div class="chapter-number">CAPÍTULO 17</div>
+                <div class="chapter-title">PLANTAE</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="header-action" onclick="saveAll()" title="Salvar Tudo">
+                <i class="fas fa-save"></i>
+            </button>
+            <button class="header-action" onclick="exportData()" title="Exportar">
+                <i class="fas fa-download"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="swiper section-swiper" id="sectionSwiper">
+            <div class="swiper-wrapper">
+                
+                <div class="swiper-slide">
+                    <div class="section-title">
+                        <i class="fas fa-seedling"></i>
+                        Características Gerais
+                    </div>
+                    
+                    <div class="content-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-leaf"></i>
+                                Reino Vegetal
+                            </div>
+                            <div class="card-actions">
+                                <button class="card-action" onclick="editCard('caracteristicas')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <textarea class="editable-content" id="caracteristicasContent" placeholder="Descreva autotrofia, parede celular, cloroplastos..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="memory-card" onclick="toggleMemory(this)" data-id="plantae1">
+                        <div class="memory-icon">🌿</div>
+                        <div class="memory-title">Autótrofas</div>
+                        <div class="memory-desc">Fotossíntese com clorofila</div>
+                    </div>
+
+                    <div class="memory-card" onclick="toggleMemory(this)" data-id="plantae2">
+                        <div class="memory-icon">🧱</div>
+                        <div class="memory-title">Parede Celular</div>
+                        <div class="memory-desc">Celulose (rigidez e sustentação)</div>
+                    </div>
+
+                    <div class="memory-card" onclick="toggleMemory(this)" data-id="plantae3">
+                        <div class="memory-icon">🌱</div>
+                        <div class="memory-title">Tecidos</div>
+                        <div class="memory-desc">Vasculares (xilema/floema) e meristemas</div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="section-title">
+                        <i class="fas fa-sitemap"></i>
+                        Grupos Vegetais
+                    </div>
+                    
+                    <div class="content-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-layer-group"></i>
+                                Classificação
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <textarea class="editable-content" id="gruposContent" placeholder="Descreva briófitas, pteridófitas, gimnospermas, angiospermas..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="memory-card" onclick="toggleMemory(this)" data-id="plantae4">
+                        <div class="memory-icon">🍃</div>
+                        <div class="memory-title">Briófitas</div>
+                        <div class="memory-desc">Musgos, avasculares, dependência de água</div>
+                    </div>
+
+                    <div class="memory-card" onclick="toggleMemory(this)" data-id="plantae5">
+                        <div class="memory-icon">🌿</div>
+                        <div class="memory-title">Pteridófitas</div>
+                        <div class="memory-desc">Samambaias, vasculares, sem sementes</div>
+                    </div>
+
+                    <div class="memory-card" onclick="toggleMemory(this)" data-id="plantae6">
+                        <div class="memory-icon">🌲</div>
+                        <div class="memory-title">Gimnospermas</div>
+                        <div class="memory-desc">Pinheiros, sementes nuas (cones)</div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="section-title">
+                        <i class="fas fa-flower"></i>
+                        Angiospermas
+                    </div>
+                    
+                    <div class="content-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-tree"></i>
+                                Plantas com Flores
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <textarea class="editable-content" id="angiospermasContent" placeholder="Descreva flor, fruto, monocotiledôneas, dicotiledôneas..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="memory-card" onclick="toggleMemory(this)" data-id="plantae7">
+                        <div class="memory-icon">🌸</div>
+                        <div class="memory-title">Flor</div>
+                        <div class="memory-desc">Estrutura reprodutiva (androceu/gineceu)</div>
+                    </div>
+
+                    <div class="memory-card" onclick="toggleMemory(this)" data-id="plantae8">
+                        <div class="memory-icon">🍎</div>
+                        <div class="memory-title">Fruto</div>
+                        <div class="memory-desc">Proteção e dispersão de sementes</div>
+                    </div>
+
+                    <div class="memory-card" onclick="toggleMemory(this)" data-id="plantae9">
+                        <div class="memory-icon">🌾</div>
+                        <div class="memory-title">Classificação</div>
+                        <div class="memory-desc">Monocotiledôneas (1 cotilédone) e dicotiledôneas (2)</div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="section-title">
+                        <i class="fas fa-brain"></i>
+                        Meu Resumo
+                    </div>
+                    
+                    <div class="content-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-file-alt"></i>
+                                Síntese do Capítulo
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <textarea class="editable-content" id="chapterSummary" placeholder="Escreva seu resumo sobre Plantae..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="mobile-footer">
+        <div class="footer-tabs" id="footerTabs">
+            <button class="footer-tab active" onclick="goToSlide(0)">
+                <i class="fas fa-seedling"></i>
+                Características
+            </button>
+            <button class="footer-tab" onclick="goToSlide(1)">
+                <i class="fas fa-sitemap"></i>
+                Grupos
+            </button>
+            <button class="footer-tab" onclick="goToSlide(2)">
+                <i class="fas fa-flower"></i>
+                Angiospermas
+            </button>
+            <button class="footer-tab" onclick="goToSlide(3)">
+                <i class="fas fa-brain"></i>
+                Resumo
+            </button>
+        </div>
+    </footer>
+
+    <div class="toast" id="toast">
+        <div class="toast-message" id="toastMessage"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+    <script>
+        let swiper = null;
+        let chapterData = {
+            caracteristicas: '',
+            grupos: '',
+            angiospermas: '',
+            chapterSummary: '',
+            memoryCards: {}
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            initSwiper();
+            loadChapterData();
+            setupEventListeners();
+            
+            if (/Kodular|WebView|Android.*AppleWebKit/.test(navigator.userAgent)) {
+                enableKodularFeatures();
+            }
+            
+            setTimeout(() => {
+                showToast('Capítulo 17 carregado!');
+            }, 1000);
+        });
+
+        function createParticles() {
+            const bg = document.getElementById('mobileBg');
+            const particleCount = window.innerWidth < 768 ? 20 : 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'floating-particle';
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                const size = 2 + Math.random() * 3;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.animationDelay = `${Math.random() * 10}s`;
+                particle.style.animationDuration = `${10 + Math.random() * 10}s`;
+                const hue = Math.random() * 60 + 180;
+                particle.style.backgroundColor = `hsla(${hue}, 100%, 65%, 0.4)`;
+                bg.appendChild(particle);
+            }
+        }
+
+        function initSwiper() {
+            swiper = new Swiper('#sectionSwiper', {
+                direction: 'horizontal',
+                slidesPerView: 1,
+                spaceBetween: 0,
+                speed: 300,
+                resistanceRatio: 0.7,
+                touchRatio: 1,
+                shortSwipes: true,
+                longSwipesRatio: 0.3,
+                followFinger: true,
+                grabCursor: true,
+                preventClicks: true,
+                preventClicksPropagation: true,
+                on: {
+                    slideChange: function() {
+                        updateActiveTab();
+                    },
+                    touchStart: function() {
+                        document.activeElement.blur();
+                    }
+                }
+            });
+        }
+
+        function goToSlide(index) {
+            if (swiper) {
+                swiper.slideTo(index, 300);
+                updateActiveTab();
+            }
+        }
+
+        function updateActiveTab() {
+            if (!swiper) return;
+            const tabs = document.querySelectorAll('.footer-tab');
+            const activeIndex = swiper.activeIndex;
+            tabs.forEach((tab, index) => {
+                if (index === activeIndex) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+        }
+
+        function loadChapterData() {
+            const saved = localStorage.getItem('biolomemo_chapter17');
+            if (saved) {
+                try {
+                    chapterData = JSON.parse(saved);
+                    document.getElementById('caracteristicasContent').value = chapterData.caracteristicas || '';
+                    document.getElementById('gruposContent').value = chapterData.grupos || '';
+                    document.getElementById('angiospermasContent').value = chapterData.angiospermas || '';
+                    document.getElementById('chapterSummary').value = chapterData.chapterSummary || '';
+                    
+                    Object.keys(chapterData.memoryCards || {}).forEach(id => {
+                        const card = document.querySelector(`[data-id="${id}"]`);
+                        if (card && chapterData.memoryCards[id]) {
+                            card.classList.add('completed');
+                        }
+                    });
+                } catch (e) {
+                    console.error('Erro ao carregar dados:', e);
+                }
+            }
+        }
+
+        function saveChapterData() {
+            try {
+                chapterData.caracteristicas = document.getElementById('caracteristicasContent').value;
+                chapterData.grupos = document.getElementById('gruposContent').value;
+                chapterData.angiospermas = document.getElementById('angiospermasContent').value;
+                chapterData.chapterSummary = document.getElementById('chapterSummary').value;
+                
+                localStorage.setItem('biolomemo_chapter17', JSON.stringify(chapterData));
+                return true;
+            } catch (e) {
+                console.error('Erro ao salvar:', e);
+                showToast('Erro ao salvar dados!', 'error');
+                return false;
+            }
+        }
+
+        function toggleMemory(card) {
+            const cardId = card.getAttribute('data-id');
+            if (!chapterData.memoryCards) chapterData.memoryCards = {};
+            const isCompleted = card.classList.contains('completed');
+            
+            if (isCompleted) {
+                card.classList.remove('completed');
+                chapterData.memoryCards[cardId] = false;
+            } else {
+                card.classList.add('completed');
+                chapterData.memoryCards[cardId] = true;
+                card.style.transform = 'scale(1.05)';
+                setTimeout(() => { card.style.transform = ''; }, 300);
+            }
+            
+            saveChapterData();
+            showToast(isCompleted ? 'Cartão desmarcado' : 'Cartão memorizado!');
+        }
+
+        function goBack() {
+            if (confirm('Salvar alterações antes de sair?')) saveAll();
+            window.history.back();
+        }
+
+        function saveAll() {
+            if (saveChapterData()) showToast('Tudo salvo com sucesso!');
+        }
+
+        function exportData() {
+            saveChapterData();
+            const dataStr = JSON.stringify(chapterData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            const fileName = `biolomemo_capitulo17_${new Date().toISOString().slice(0,10)}.json`;
+            const link = document.createElement('a');
+            link.href = dataUri;
+            link.download = fileName;
+            link.click();
+            showToast('Dados exportados!');
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toast.className = 'toast';
+            toast.classList.add(type);
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+
+        function setupEventListeners() {
+            const editableFields = document.querySelectorAll('.editable-content');
+            editableFields.forEach(field => {
+                field.addEventListener('input', debounce(saveChapterData, 1000));
+            });
+            
+            document.addEventListener('dblclick', (e) => { e.preventDefault(); }, { passive: false });
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        function enableKodularFeatures() {
+            console.log("📱 Ativando otimizações para Android WebView");
+            const touchElements = document.querySelectorAll('button, .card-action, .memory-card');
+            touchElements.forEach(el => {
+                el.style.minHeight = '44px';
+                el.style.minWidth = '44px';
+            });
+            
+            document.addEventListener('contextmenu', (e) => { e.preventDefault(); });
+            
+            setTimeout(() => {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen();
+                }
+            }, 500);
+        }
+    </script>
+</body>
+</html>
