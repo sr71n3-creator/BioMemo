@@ -3,975 +3,945 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Palácio da Biologia - BIOLOMEMO</title>
+    <title>BIOLOMEMO • Sistema Neural de Biologia</title>
     
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;900&family=Source+Code+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     
     <style>
-        /* ========== VARIÁVEIS E RESET ========== */
-        :root {
-            --primary-green: #10b981;
-            --secondary-green: #059669;
-            --dark-green: #064e3b;
-            --light-green: #a7f3d0;
-            --background-dark: #0a0a16;
-            --card-dark: #151530;
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.7);
-        }
-
+        /* ========== RESET ========== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
-            font-family: 'Exo 2', sans-serif;
         }
 
         body {
-            background: var(--background-dark);
-            color: var(--text-primary);
+            font-family: 'Exo 2', sans-serif;
+            background: #0a0a16;
+            color: #fff;
             min-height: 100vh;
             overflow-x: hidden;
         }
 
         /* ========== FUNDO ANIMADO ========== */
-        .animated-bg {
+        .neural-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
+            z-index: -2;
             background: 
-                radial-gradient(circle at 20% 30%, rgba(16, 185, 129, 0.1) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(5, 150, 105, 0.08) 0%, transparent 40%),
-                linear-gradient(135deg, #0a0a16 0%, #0f172a 100%);
+                radial-gradient(circle at 20% 30%, rgba(14, 165, 233, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #0a0a16 0%, #151530 100%);
             overflow: hidden;
         }
 
-        .floating-particle {
+        .neural-particle {
             position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle, var(--primary-green), transparent);
-            animation: floatParticle 20s infinite linear;
-            opacity: 0.1;
-        }
-
-        @keyframes floatParticle {
-            0% { transform: translateY(0) translateX(0); }
-            100% { transform: translateY(-100vh) translateX(100px); }
-        }
-
-        /* ========== HEADER ========== */
-        .main-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(10, 10, 22, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(16, 185, 129, 0.3);
-            z-index: 1000;
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo-icon {
-            font-size: 1.8rem;
-            color: var(--primary-green);
-        }
-
-        .header-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(45deg, var(--primary-green), var(--light-green));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .header-right {
-            display: flex;
-            gap: 10px;
-        }
-
-        .header-btn {
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-secondary);
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.2rem;
-        }
-
-        .header-btn:hover {
-            color: var(--primary-green);
-            border-color: var(--primary-green);
-            transform: translateY(-2px);
-        }
-
-        /* ========== CONTEÚDO PRINCIPAL ========== */
-        .main-content {
-            padding: 100px 20px 50px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .intro-section {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .intro-title {
-            font-size: 2.5rem;
-            font-weight: 900;
-            margin-bottom: 20px;
-            background: linear-gradient(45deg, var(--primary-green), var(--light-green));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .intro-subtitle {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 30px;
-            line-height: 1.6;
-        }
-
-        .intro-btn {
-            padding: 15px 40px;
-            background: linear-gradient(45deg, var(--primary-green), var(--secondary-green));
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-weight: 700;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
-        }
-
-        .intro-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.4);
-        }
-
-        .section {
-            margin-bottom: 60px;
-        }
-
-        .section-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--primary-green);
-            margin-bottom: 30px;
-            text-align: center;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        .section-title::before,
-        .section-title::after {
-            content: '';
-            flex: 1;
+            width: 2px;
             height: 2px;
-            background: linear-gradient(90deg, transparent, var(--primary-green), transparent);
-        }
-
-        .topics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 25px;
-        }
-
-        .topic-card {
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 25px 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            min-height: 160px;
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .topic-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary-green);
-            background: rgba(16, 185, 129, 0.1);
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2);
-        }
-
-        .topic-number {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            font-size: 0.9rem;
-            color: var(--primary-green);
-            font-weight: 700;
-            background: rgba(16, 185, 129, 0.1);
-            padding: 2px 8px;
-            border-radius: 20px;
-        }
-
-        .topic-icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .topic-card:hover .topic-icon {
-            transform: scale(1.1);
-        }
-
-        .topic-title {
-            font-size: 0.95rem;
-            text-align: center;
-            font-weight: 600;
-            color: var(--text-primary);
-            line-height: 1.3;
-        }
-
-        /* ========== MODAL (apenas para ajuda) ========== */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            backdrop-filter: blur(10px);
-        }
-
-        .modal-content {
-            background: var(--card-dark);
-            border-radius: 20px;
-            border: 1px solid var(--primary-green);
-            width: 90%;
-            max-width: 600px;
-            max-height: 90vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .modal-header {
-            padding: 20px 30px;
-            background: rgba(0, 0, 0, 0.3);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--primary-green);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1.8rem;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .modal-close:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
-        }
-
-        .modal-body {
-            padding: 30px;
-            overflow-y: auto;
-            flex: 1;
-        }
-
-        /* ========== LOADING OVERLAY ========== */
-        .loading-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(10, 10, 22, 0.95);
-            z-index: 3000;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(10px);
-        }
-
-        .loading-spinner {
-            width: 80px;
-            height: 80px;
-            border: 5px solid rgba(16, 185, 129, 0.3);
-            border-top: 5px solid var(--primary-green);
+            background: rgba(14, 165, 233, 0.5);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+
+        /* ========== LOADING ========== */
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a16;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.5s;
+        }
+
+        .dna-loader {
+            width: 100px;
+            height: 100px;
+            position: relative;
             margin-bottom: 20px;
+        }
+
+        .dna-strand {
+            position: absolute;
+            width: 2px;
+            height: 100%;
+            background: #0ea5e9;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: spin 2s linear infinite;
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% { transform: translateX(-50%) rotate(0deg); }
+            100% { transform: translateX(-50%) rotate(360deg); }
         }
 
-        .loading-text {
-            color: var(--primary-green);
+        /* ========== CABEÇALHO ========== */
+        .header {
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .title {
+            font-size: 2.8rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #0ea5e9, #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        /* ========== GRADE DE NEURÔNIOS ========== */
+        .neurons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .neuron {
+            position: relative;
+            background: rgba(20, 20, 40, 0.8);
+            border-radius: 15px;
+            padding: 20px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .neuron::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(14, 165, 233, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .neuron:hover {
+            transform: translateY(-5px);
+            border-color: #0ea5e9;
+            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.3);
+        }
+
+        .neuron:hover::before {
+            transform: translateX(100%);
+        }
+
+        .neuron.completed {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: #10b981;
+        }
+
+        .neuron-number {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(14, 165, 233, 0.2);
+            color: #0ea5e9;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .neuron-icon {
+            font-size: 2.5rem;
+            margin: 15px 0;
+            color: #8b5cf6;
+        }
+
+        .neuron-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            line-height: 1.3;
+        }
+
+        .neuron-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #0ea5e9, #8b5cf6);
+            border-radius: 0 0 15px 15px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* ========== INTERFACE DE ESTUDO ========== */
+        #studyInterface {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a16;
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+        }
+
+        .study-header {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(20, 20, 40, 0.9);
+            border-bottom: 1px solid rgba(14, 165, 233, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: #0ea5e9;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 10px;
+            margin-right: 15px;
+        }
+
+        .chapter-title {
+            flex: 1;
             font-size: 1.2rem;
             font-weight: 600;
+            color: #fff;
         }
 
-        /* ========== SCROLLBAR ========== */
-        ::-webkit-scrollbar {
-            width: 10px;
-            height: 10px;
+        .study-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        ::-webkit-scrollbar-track {
+        .iframe-container {
+            flex: 2;
+            position: relative;
+            background: #fff;
+        }
+
+        #contentFrame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .study-panel {
+            flex: 1;
+            background: rgba(20, 20, 40, 0.9);
+            border-top: 1px solid rgba(14, 165, 233, 0.3);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .panel-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .tab.active {
+            color: #0ea5e9;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #0ea5e9;
+            border-radius: 3px 3px 0 0;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        #notesArea {
+            width: 100%;
+            height: 200px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 5px;
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            padding: 15px;
+            font-family: 'Exo 2', sans-serif;
+            resize: vertical;
+            margin-bottom: 15px;
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(to bottom, var(--primary-green), var(--secondary-green));
-            border-radius: 5px;
+        .progress-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(to bottom, var(--secondary-green), var(--dark-green));
+        .stat-card {
+            background: rgba(14, 165, 233, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(14, 165, 233, 0.2);
         }
 
-        /* ========== RESPONSIVIDADE ========== */
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0ea5e9;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #0ea5e9, #8b5cf6);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            margin-top: 30px;
+        }
+
+        /* ========== RESPONSIVO ========== */
         @media (max-width: 768px) {
-            .main-content {
-                padding: 80px 15px 30px;
-            }
-            
-            .intro-title {
+            .title {
                 font-size: 2rem;
             }
             
-            .section-title {
-                font-size: 1.6rem;
-                flex-direction: column;
+            .neurons-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
                 gap: 10px;
+                padding: 10px;
             }
             
-            .section-title::before,
-            .section-title::after {
-                display: none;
+            .neuron {
+                padding: 15px 5px;
             }
             
-            .topics-grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 15px;
-            }
-            
-            .topic-card {
-                min-height: 140px;
-                padding: 20px 10px;
-            }
-            
-            .topic-icon {
+            .neuron-icon {
                 font-size: 2rem;
             }
             
-            .modal-content {
-                width: 95%;
-                padding: 0;
+            .neuron-title {
+                font-size: 0.8rem;
             }
             
-            .modal-header {
-                padding: 15px 20px;
+            .study-content {
+                flex-direction: column;
             }
             
-            .modal-body {
-                padding: 20px;
+            .iframe-container {
+                flex: 3;
             }
         }
 
         @media (max-width: 480px) {
-            .header-title {
-                font-size: 1.2rem;
+            .neurons-grid {
+                grid-template-columns: repeat(3, 1fr);
             }
             
-            .header-btn {
-                width: 35px;
-                height: 35px;
+            .neuron {
+                padding: 10px 5px;
             }
             
-            .intro-title {
+            .neuron-icon {
                 font-size: 1.8rem;
+                margin: 10px 0;
             }
             
-            .intro-btn {
-                padding: 12px 30px;
-                font-size: 1rem;
-            }
-            
-            .topics-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-            }
-            
-            .topic-card {
-                min-height: 120px;
-                padding: 15px 10px;
-            }
-            
-            .topic-icon {
-                font-size: 1.8rem;
-                margin-bottom: 10px;
-            }
-            
-            .topic-title {
-                font-size: 0.85rem;
+            .progress-stats {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <!-- ========== FUNDO ANIMADO ========== -->
-    <div class="animated-bg" id="animatedBg"></div>
-
-    <!-- ========== LOADING OVERLAY ========== -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
-        <div class="loading-text" id="loadingText">Carregando conteúdo...</div>
+    <!-- ========== LOADING ========== -->
+    <div id="loading">
+        <div class="dna-loader">
+            <div class="dna-strand"></div>
+        </div>
+        <div style="color: #0ea5e9; font-weight: 600; margin-top: 20px;">INICIALIZANDO SISTEMA NEURAL...</div>
     </div>
 
-    <!-- ========== HEADER ========== -->
-    <header class="main-header">
-        <div class="header-left">
-            <div class="logo-icon">
-                <i class="fas fa-seedling"></i>
-            </div>
-            <div class="header-title">Palácio da Biologia</div>
-        </div>
-        <div class="header-right">
-            <button class="header-btn" onclick="toggleSound()" title="Som">
-                <i class="fas fa-volume-up"></i>
-            </button>
-            <button class="header-btn" onclick="showHelp()" title="Ajuda">
-                <i class="fas fa-question-circle"></i>
-            </button>
+    <!-- ========== FUNDO ANIMADO ========== -->
+    <div class="neural-bg" id="neuralBg"></div>
+
+    <!-- ========== CABEÇALHO ========== -->
+    <header class="header">
+        <h1 class="title">BIOLOMEMO</h1>
+        <div class="subtitle">Sistema Neural de Aprendizado de Biologia</div>
+        <div style="color: rgba(255, 255, 255, 0.5); font-size: 0.9rem; max-width: 600px; margin: 0 auto;">
+            Selecione um neurônio para acessar o conteúdo do capítulo
         </div>
     </header>
 
-    <!-- ========== CONTEÚDO PRINCIPAL ========== -->
-    <main class="main-content">
-        <div class="intro-section">
-            <h1 class="intro-title">Sistema de Estudos de Biologia</h1>
-            <p class="intro-subtitle">
-                Explore os 41 tópicos fundamentais da biologia organizados em 4 seções. 
-                Clique em qualquer tópico para acessar a página completa no GitHub Pages.
-            </p>
-            <button class="intro-btn" onclick="showAllTopicsModal()">
-                <i class="fas fa-list"></i>
-                Ver Todos os Tópicos
+    <!-- ========== GRADE DE NEURÔNIOS ========== -->
+    <div class="neurons-grid" id="neuronsGrid">
+        <!-- Neurônios serão gerados por JavaScript -->
+    </div>
+
+    <!-- ========== INTERFACE DE ESTUDO ========== -->
+    <div id="studyInterface">
+        <div class="study-header">
+            <button class="back-btn" onclick="returnToGrid()">
+                <i class="fas fa-arrow-left"></i>
             </button>
+            <div class="chapter-title" id="chapterTitle">Capítulo 00: Introdução</div>
         </div>
-
-        <!-- Seção 1: Fundamentos da Vida -->
-        <div class="section">
-            <h2 class="section-title">Fundamentos da Vida</h2>
-            <div class="topics-grid" id="section1">
-                <!-- Tópicos 1-11 serão inseridos por JavaScript -->
+        
+        <div class="study-content">
+            <div class="iframe-container">
+                <iframe id="contentFrame" src="about:blank"></iframe>
             </div>
-        </div>
-
-        <!-- Seção 2: Diversidade Biológica -->
-        <div class="section">
-            <h2 class="section-title">Diversidade Biológica</h2>
-            <div class="topics-grid" id="section2">
-                <!-- Tópicos 12-25 serão inseridos por JavaScript -->
-            </div>
-        </div>
-
-        <!-- Seção 3: Fisiologia e Sistemas -->
-        <div class="section">
-            <h2 class="section-title">Fisiologia e Sistemas</h2>
-            <div class="topics-grid" id="section3">
-                <!-- Tópicos 26-35 serão inseridos por JavaScript -->
-            </div>
-        </div>
-
-        <!-- Seção 4: Ecologia e Evolução -->
-        <div class="section">
-            <h2 class="section-title">Ecologia e Evolução</h2>
-            <div class="topics-grid" id="section4">
-                <!-- Tópicos 36-41 serão inseridos por JavaScript -->
-            </div>
-        </div>
-    </main>
-
-    <!-- ========== MODAL APENAS PARA AJUDA ========== -->
-    <div class="modal-overlay" id="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title" id="modalTitle">
-                    <i class="fas fa-question-circle"></i>
-                    <span id="modalTitleText">Ajuda</span>
-                </h2>
-                <button class="modal-close" onclick="closeModal()">&times;</button>
-            </div>
-            <div class="modal-body" id="modalBody">
-                <!-- Conteúdo do modal será inserido por JavaScript -->
+            
+            <div class="study-panel">
+                <div class="panel-tabs">
+                    <button class="tab active" onclick="switchTab('notes')">Anotações</button>
+                    <button class="tab" onclick="switchTab('progress')">Progresso</button>
+                    <button class="tab" onclick="switchTab('tools')">Ferramentas</button>
+                </div>
+                
+                <div id="notesTab" class="tab-content active">
+                    <textarea id="notesArea" placeholder="Digite suas anotações aqui... Elas serão salvas automaticamente."></textarea>
+                    <button class="action-btn" onclick="saveNotes()">
+                        <i class="fas fa-save"></i> Salvar Anotações
+                    </button>
+                </div>
+                
+                <div id="progressTab" class="tab-content">
+                    <div class="progress-stats">
+                        <div class="stat-card">
+                            <div class="stat-value" id="completedCount">0</div>
+                            <div class="stat-label">Capítulos Concluídos</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalNotes">0</div>
+                            <div class="stat-label">Anotações</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin: 20px 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span style="color: rgba(255, 255, 255, 0.8);">Progresso Geral</span>
+                            <span id="progressPercent" style="color: #0ea5e9; font-weight: bold;">0%</span>
+                        </div>
+                        <div style="height: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 5px; overflow: hidden;">
+                            <div id="progressBar" style="height: 100%; background: linear-gradient(90deg, #0ea5e9, #8b5cf6); width: 0%; border-radius: 5px;"></div>
+                        </div>
+                    </div>
+                    
+                    <button class="action-btn" onclick="markChapterCompleted()">
+                        <i class="fas fa-check-circle"></i> Marcar como Concluído
+                    </button>
+                </div>
+                
+                <div id="toolsTab" class="tab-content">
+                    <button class="action-btn" onclick="exportData()">
+                        <i class="fas fa-download"></i> Exportar Dados
+                    </button>
+                    <button class="action-btn" onclick="importData()" style="background: linear-gradient(45deg, #10b981, #0ea5e9); margin-top: 10px;">
+                        <i class="fas fa-upload"></i> Importar Dados
+                    </button>
+                    <button class="action-btn" onclick="clearData()" style="background: linear-gradient(45deg, #ef4444, #dc2626); margin-top: 10px;">
+                        <i class="fas fa-trash"></i> Limpar Dados
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <div>Sistema de Aprendizado Neural - BioloMemo</div>
+        <div style="margin-top: 5px; font-size: 0.8rem;">Versão 1.0 • Online</div>
+    </footer>
+
     <script>
-        // ========== DADOS ORIGINAIS ==========
-        const topics = [
-            // Fundamentos da Vida (1-11)
-            { number: "1", title: "Origem da Vida", icon: "🌋", section: 1 },
-            { number: "2", title: "Citologia", icon: "🔬", section: 1 },
-            { number: "3", title: "Composição Celular", icon: "🧫", section: 1 },
-            { number: "4", title: "Superfície Celular", icon: "🛡️", section: 1 },
-            { number: "5", title: "Citoplasma", icon: "🌀", section: 1 },
-            { number: "6", title: "Metabolismo Energético", icon: "⚡", section: 1 },
-            { number: "7", title: "Núcleo e Síntese Proteica", icon: "🧬", section: 1 },
-            { number: "8", title: "Divisões Celulares", icon: "🔄", section: 1 },
-            { number: "9", title: "Reprodução", icon: "👨‍👩‍👧‍👦", section: 1 },
-            { number: "10", title: "Desenvolvimento Embrionário", icon: "👶", section: 1 },
-            { number: "11", title: "Histologia Animal", icon: "🔍", section: 1 },
-            
-            // Diversidade Biológica (12-25)
-            { number: "12", title: "Evolução", icon: "🦖", section: 2 },
-            { number: "13", title: "Vírus", icon: "🦠", section: 2 },
-            { number: "14", title: "Monera", icon: "🦠", section: 2 },
-            { number: "15", title: "Protista", icon: "🐙", section: 2 },
-            { number: "16", title: "Fungi", icon: "🍄", section: 2 },
-            { number: "17", title: "Plantae", icon: "🌿", section: 2 },
-            { number: "18", title: "Morfologia Vegetal", icon: "🌱", section: 2 },
-            { number: "19", title: "Fisiologia Vegetal", icon: "🌻", section: 2 },
-            { number: "20", title: "Introdução aos Animais", icon: "🐾", section: 2 },
-            { number: "21", title: "Platelmintos e Nematoda", icon: "🐛", section: 2 },
-            { number: "22", title: "Mollusca e Anelida", icon: "🐌", section: 2 },
-            { number: "23", title: "Arthropoda e Equinodermata", icon: "🦀", section: 2 },
-            { number: "24", title: "Cordata 1", icon: "🐠", section: 2 },
-            { number: "25", title: "Cordata 2", icon: "🐒", section: 2 },
-            
-            // Fisiologia e Sistemas (26-35)
-            { number: "26", title: "Sustentação, Digestão, Respiração", icon: "🫁", section: 3 },
-            { number: "27", title: "Circulação, Defesa, Excreção", icon: "❤️", section: 3 },
-            { number: "28", title: "Coordenação e Regulação", icon: "🧠", section: 3 },
-            { number: "29", title: "Genética Clássica", icon: "🧬", section: 3 },
-            { number: "30", title: "Primeira Lei de Mendel", icon: "🌱", section: 3 },
-            { number: "31", title: "Segunda Lei de Mendel", icon: "🌾", section: 3 },
-            { number: "32", title: "Ligação Gênica", icon: "🔗", section: 3 },
-            { number: "33", title: "Mutação", icon: "⚡", section: 3 },
-            { number: "34", title: "Cromossomos e Genes", icon: "🧬", section: 3 },
-            { number: "35", title: "Biotecnologia", icon: "🧪", section: 3 },
-            
-            // Ecologia e Evolução (36-41)
-            { number: "36", title: "Teoria da Evolução", icon: "🦍", section: 4 },
-            { number: "37", title: "Ecologia Populacional", icon: "👥", section: 4 },
-            { number: "38", title: "Ecologia de Comunidades", icon: "🌳", section: 4 },
-            { number: "39", title: "Relações Ecológicas", icon: "🤝", section: 4 },
-            { number: "40", title: "Sucessão Ecológica", icon: "🔄", section: 4 },
-            { number: "41", title: "Equilíbrio Ecológico", icon: "⚖️", section: 4 }
+        // ========== DADOS DOS CAPÍTULOS ==========
+        const chapters = [
+            { number: "00", title: "Introdução", icon: "🏛️", link: "capitulo00.html" },
+            { number: "01", title: "Origem da Vida", icon: "🌋", link: "capitulo01.html" },
+            { number: "02", title: "Citologia", icon: "🔬", link: "capitulo02.html" },
+            { number: "03", title: "Composição Celular", icon: "🧫", link: "capitulo03.html" },
+            { number: "04", title: "Superfície Celular", icon: "🛡️", link: "capitulo04.html" },
+            { number: "05", title: "Citoplasma", icon: "🌀", link: "capitulo05.html" },
+            { number: "06", title: "Metabolismo Energético", icon: "⚡", link: "capitulo06.html" },
+            { number: "07", title: "Núcleo e Síntese Proteica", icon: "🧬", link: "capitulo07.html" },
+            { number: "08", title: "Divisões Celulares", icon: "🔄", link: "capitulo08.html" },
+            { number: "09", title: "Reprodução", icon: "👨‍👩‍👧‍👦", link: "capitulo09.html" },
+            { number: "10", title: "Desenvolvimento Embrionário", icon: "👶", link: "capitulo10.html" },
+            { number: "11", title: "Histologia Animal", icon: "🔍", link: "capitulo11.html" },
+            { number: "12", title: "Evolução", icon: "🦖", link: "capitulo12.html" },
+            { number: "13", title: "Vírus", icon: "🦠", link: "capitulo13.html" },
+            { number: "14", title: "Monera", icon: "🦠", link: "capitulo14.html" },
+            { number: "15", title: "Protista", icon: "🐙", link: "capitulo15.html" },
+            { number: "16", title: "Fungi", icon: "🍄", link: "capitulo16.html" },
+            { number: "17", title: "Plantae", icon: "🌿", link: "capitulo17.html" },
+            { number: "18", title: "Morfologia Vegetal", icon: "🌱", link: "capitulo18.html" },
+            { number: "19", title: "Fisiologia Vegetal", icon: "🌻", link: "capitulo19.html" },
+            { number: "20", title: "Introdução aos Animais", icon: "🐾", link: "capitulo20.html" },
+            { number: "21", title: "Platelmintos e Nematoda", icon: "🐛", link: "capitulo21.html" },
+            { number: "22", title: "Mollusca e Anelida", icon: "🐌", link: "capitulo22.html" },
+            { number: "23", title: "Arthropoda e Equinodermata", icon: "🦀", link: "capitulo23.html" },
+            { number: "24", title: "Cordata 1", icon: "🐠", link: "capitulo24.html" },
+            { number: "25", title: "Cordata 2", icon: "🐒", link: "capitulo25.html" },
+            { number: "26", title: "Sustentação, Digestão, Respiração", icon: "🫁", link: "capitulo26.html" },
+            { number: "27", title: "Circulação, Defesa, Excreção", icon: "❤️", link: "capitulo27.html" },
+            { number: "28", title: "Coordenação e Regulação", icon: "🧠", link: "capitulo28.html" },
+            { number: "29", title: "Genética Clássica", icon: "🧬", link: "capitulo29.html" },
+            { number: "30", title: "Primeira Lei de Mendel", icon: "🌱", link: "capitulo30.html" },
+            { number: "31", title: "Segunda Lei de Mendel", icon: "🌾", link: "capitulo31.html" },
+            { number: "32", title: "Ligação Gênica", icon: "🔗", link: "capitulo32.html" },
+            { number: "33", title: "Mutação", icon: "⚡", link: "capitulo33.html" },
+            { number: "34", title: "Cromossomos e Genes", icon: "🧬", link: "capitulo34.html" },
+            { number: "35", title: "Biotecnologia", icon: "🧪", link: "capitulo35.html" },
+            { number: "36", title: "Teoria da Evolução", icon: "🦍", link: "capitulo36.html" },
+            { number: "37", title: "Ecologia Populacional", icon: "👥", link: "capitulo37.html" },
+            { number: "38", title: "Ecologia de Comunidades", icon: "🌳", link: "capitulo38.html" },
+            { number: "39", title: "Relações Ecológicas", icon: "🤝", link: "capitulo39.html" },
+            { number: "40", title: "Sucessão Ecológica", icon: "🔄", link: "capitulo40.html" },
+            { number: "41", title: "Equilíbrio Ecológico", icon: "⚖️", link: "capitulo41.html" }
         ];
 
-        // ========== URL BASE SIMPLIFICADA ==========
-        // Usa caminhos relativos para funcionar em qualquer configuração do GitHub Pages
-        const BASE_URL = './';  // Pasta atual onde está o index.html
-
         // ========== VARIÁVEIS GLOBAIS ==========
-        let soundEnabled = true;
+        let currentChapter = null;
+        let userData = {
+            completedChapters: {},
+            notes: {},
+            progress: 0
+        };
 
         // ========== INICIALIZAÇÃO ==========
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("🌿 Palácio da Biologia inicializado!");
+            // Carregar dados do localStorage
+            loadUserData();
             
-            createAnimatedBackground();
-            renderTopicCards();
-            setupEventListeners();
+            // Criar partículas de fundo
+            createParticles();
             
-            // Detectar Kodular/WebView
-            if (/Kodular|WebView|Android.*AppleWebKit/.test(navigator.userAgent)) {
-                optimizeForMobile();
-            }
+            // Criar grade de neurônios
+            createNeuronsGrid();
+            
+            // Esconder loading após 1.5 segundos
+            setTimeout(() => {
+                document.getElementById('loading').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loading').style.display = 'none';
+                }, 500);
+            }, 1500);
+            
+            // Atualizar progresso
+            updateProgress();
+            
+            console.log("✅ BioloMemo inicializado com sucesso!");
         });
 
-        // ========== FUNDO ANIMADO ==========
-        function createAnimatedBackground() {
-            const bg = document.getElementById('animatedBg');
-            
-            for (let i = 0; i < 15; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'floating-particle';
-                particle.style.width = particle.style.height = (10 + Math.random() * 40) + 'px';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 20 + 's';
-                particle.style.animationDuration = (15 + Math.random() * 15) + 's';
-                bg.appendChild(particle);
+        // ========== FUNÇÕES DE DADOS ==========
+        function loadUserData() {
+            const savedData = localStorage.getItem('biolomemo_data');
+            if (savedData) {
+                try {
+                    userData = JSON.parse(savedData);
+                    console.log("📁 Dados carregados do localStorage");
+                } catch (e) {
+                    console.error("Erro ao carregar dados:", e);
+                    resetUserData();
+                }
             }
         }
 
-        // ========== RENDERIZAR CARTÕES ==========
-        function renderTopicCards() {
-            const sections = [
-                document.getElementById('section1'),
-                document.getElementById('section2'),
-                document.getElementById('section3'),
-                document.getElementById('section4')
-            ];
+        function saveUserData() {
+            try {
+                localStorage.setItem('biolomemo_data', JSON.stringify(userData));
+                console.log("💾 Dados salvos no localStorage");
+            } catch (e) {
+                console.error("Erro ao salvar dados:", e);
+            }
+        }
+
+        function resetUserData() {
+            userData = {
+                completedChapters: {},
+                notes: {},
+                progress: 0
+            };
+            saveUserData();
+            updateProgress();
+            alert("Dados resetados com sucesso!");
+        }
+
+        // ========== INTERFACE DE NEURÔNIOS ==========
+        function createNeuronsGrid() {
+            const grid = document.getElementById('neuronsGrid');
+            grid.innerHTML = '';
             
-            sections.forEach(section => section.innerHTML = '');
-            
-            topics.forEach(topic => {
-                const card = document.createElement('a');
-                card.className = 'topic-card';
-                card.dataset.topicNumber = topic.number;
+            chapters.forEach(chapter => {
+                const neuron = document.createElement('div');
+                neuron.className = 'neuron';
+                if (userData.completedChapters[chapter.number]) {
+                    neuron.classList.add('completed');
+                }
                 
-                card.innerHTML = `
-                    <div class="topic-number">${topic.number}</div>
-                    <div class="topic-icon">${topic.icon}</div>
-                    <div class="topic-title">${topic.title}</div>
+                neuron.innerHTML = `
+                    <div class="neuron-number">${chapter.number}</div>
+                    <div class="neuron-icon">${chapter.icon}</div>
+                    <div class="neuron-title">${chapter.title}</div>
+                    <div class="neuron-progress"></div>
                 `;
                 
-                // Configuração do link
-                const topicUrl = getTopicUrl(topic.number);
-                card.href = topicUrl;
-                card.onclick = (e) => {
-                    e.preventDefault();
-                    navigateToTopic(topic);
-                };
+                neuron.addEventListener('click', () => openChapter(chapter));
+                grid.appendChild(neuron);
+            });
+        }
+
+        // ========== GERENCIAMENTO DE CAPÍTULOS ==========
+        function openChapter(chapter) {
+            currentChapter = chapter;
+            
+            // Atualizar título
+            document.getElementById('chapterTitle').textContent = 
+                `Capítulo ${chapter.number}: ${chapter.title}`;
+            
+            // Carregar conteúdo
+            document.getElementById('contentFrame').src = chapter.link;
+            
+            // Carregar anotações
+            document.getElementById('notesArea').value = 
+                userData.notes[chapter.number] || '';
+            
+            // Mostrar interface de estudo
+            document.getElementById('studyInterface').style.display = 'flex';
+            
+            // Atualizar progresso do neurônio
+            updateNeuronProgress(chapter.number);
+        }
+
+        function returnToGrid() {
+            // Salvar anotações antes de sair
+            if (currentChapter) {
+                saveNotes();
+            }
+            
+            // Esconder interface de estudo
+            document.getElementById('studyInterface').style.display = 'none';
+            document.getElementById('contentFrame').src = 'about:blank';
+            currentChapter = null;
+        }
+
+        // ========== ANOTAÇÕES ==========
+        function saveNotes() {
+            if (!currentChapter) return;
+            
+            const notes = document.getElementById('notesArea').value;
+            userData.notes[currentChapter.number] = notes;
+            saveUserData();
+            updateProgress();
+            
+            // Mostrar feedback
+            showNotification('Anotações salvas com sucesso!');
+        }
+
+        // ========== PROGRESSO ==========
+        function markChapterCompleted() {
+            if (!currentChapter) return;
+            
+            if (confirm(`Marcar Capítulo ${currentChapter.number} como concluído?`)) {
+                userData.completedChapters[currentChapter.number] = true;
+                saveUserData();
+                updateProgress();
+                createNeuronsGrid(); // Atualizar grade
                 
-                if (topic.section >= 1 && topic.section <= 4) {
-                    sections[topic.section - 1].appendChild(card);
+                showNotification('Capítulo marcado como concluído!');
+            }
+        }
+
+        function updateProgress() {
+            // Calcular progresso
+            const completed = Object.keys(userData.completedChapters).length;
+            const total = chapters.length;
+            const progress = Math.round((completed / total) * 100);
+            
+            // Atualizar UI
+            document.getElementById('completedCount').textContent = completed;
+            document.getElementById('totalNotes').textContent = Object.keys(userData.notes).length;
+            document.getElementById('progressPercent').textContent = `${progress}%`;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            
+            // Atualizar dados
+            userData.progress = progress;
+        }
+
+        function updateNeuronProgress(chapterNumber) {
+            const neurons = document.querySelectorAll('.neuron');
+            neurons.forEach(neuron => {
+                const numberDiv = neuron.querySelector('.neuron-number');
+                if (numberDiv && numberDiv.textContent === chapterNumber) {
+                    const progressBar = neuron.querySelector('.neuron-progress');
+                    if (userData.completedChapters[chapterNumber]) {
+                        progressBar.style.width = '100%';
+                    } else {
+                        // Simular progresso baseado em tempo de estudo
+                        const studyTime = Math.min(100, Math.random() * 30 + 10);
+                        progressBar.style.width = `${studyTime}%`;
+                    }
                 }
             });
         }
 
-        // ========== NAVEGAÇÃO PARA TÓPICOS ==========
-        function getTopicUrl(topicNumber) {
-            const formattedNumber = topicNumber.padStart(2, '0');
-            return `${BASE_URL}topico-${formattedNumber}/`;
-        }
-
-        function navigateToTopic(topic) {
-            showLoading(`Abrindo ${topic.title}...`);
-            
-            const topicUrl = getTopicUrl(topic.number);
-            
-            // Verificar se a página existe
-            fetch(topicUrl, { method: 'HEAD' })
-                .then(response => {
-                    if (response.ok) {
-                        setTimeout(() => {
-                            hideLoading();
-                            window.location.href = topicUrl;
-                        }, 800);
-                    } else {
-                        throw new Error('Página não encontrada');
-                    }
-                })
-                .catch(error => {
-                    hideLoading();
-                    showNotification(`⚠️ Página ainda não criada: ${topic.title}`, 'warning');
-                    console.log(`Crie a página em: ${topicUrl}`);
-                    
-                    setTimeout(() => {
-                        if (confirm(`A página para "${topic.title}" ainda não foi criada.\n\nDeseja ver a estrutura sugerida?`)) {
-                            showPageStructure(topic);
-                        }
-                    }, 500);
-                });
-        }
-
-        // ========== LOADING ==========
-        function showLoading(message = "Carregando conteúdo...") {
-            const overlay = document.getElementById('loadingOverlay');
-            const text = document.getElementById('loadingText');
-            
-            text.textContent = message;
-            overlay.style.display = 'flex';
-        }
-
-        function hideLoading() {
-            const overlay = document.getElementById('loadingOverlay');
-            overlay.style.display = 'none';
-        }
-
-        // ========== MODAL DE AJUDA ==========
-        function showHelp() {
-            const modalTitle = document.getElementById('modalTitleText');
-            const modalBody = document.getElementById('modalBody');
-            
-            modalTitle.textContent = 'Ajuda';
-            
-            const content = `
-                <div style="max-width: 600px; margin: 0 auto;">
-                    <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 25px; margin-bottom: 20px;">
-                        <h3 style="color: var(--primary-green); margin-bottom: 15px;">📚 Como usar o Palácio da Biologia</h3>
-                        <ul style="color: var(--text-secondary); padding-left: 20px; line-height: 1.6;">
-                            <li><strong>Clique em qualquer tópico</strong> para abrir sua página completa no GitHub Pages</li>
-                            <li>Cada tópico tem sua própria URL exclusiva</li>
-                            <li>Use o botão "Ver Todos os Tópicos" para uma visão geral</li>
-                            <li>Seu progresso é salvo automaticamente no navegador</li>
-                            <li>Pode usar em qualquer dispositivo</li>
-                        </ul>
-                    </div>
-                    
-                    <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 25px; margin-bottom: 20px;">
-                        <h3 style="color: var(--primary-green); margin-bottom: 15px;">🔗 Estrutura do Projeto</h3>
-                        <p style="color: var(--text-secondary); margin-bottom: 10px;">
-                            Cada tópico está em uma pasta separada:
-                        </p>
-                        <code style="display: block; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; margin-bottom: 15px; color: var(--light-green);">
-                            /topico-01/<br>
-                            /topico-02/<br>
-                            ...<br>
-                            /topico-41/
-                        </code>
-                        <p style="color: var(--text-secondary); font-size: 0.9rem;">
-                            O sistema automaticamente busca as pastas no mesmo diretório do index.html
-                        </p>
-                    </div>
-                    
-                    <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 25px;">
-                        <h3 style="color: var(--primary-green); margin-bottom: 15px;">🎯 Dicas de Estudo</h3>
-                        <ul style="color: var(--text-secondary); padding-left: 20px; line-height: 1.6;">
-                            <li>Estude um tópico por dia</li>
-                            <li>Faça anotações enquanto estuda</li>
-                            <li>Revise os tópicos anteriores toda semana</li>
-                            <li>Complete os quizzes para fixar o conteúdo</li>
-                            <li>Associe imagens aos conceitos</li>
-                        </ul>
-                    </div>
-                </div>
-            `;
-            
-            modalBody.innerHTML = content;
-            document.getElementById('modal').style.display = 'flex';
-        }
-
-        function showAllTopicsModal() {
-            const modalTitle = document.getElementById('modalTitleText');
-            const modalBody = document.getElementById('modalBody');
-            
-            modalTitle.textContent = 'Todos os Tópicos';
-            
-            let content = `
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <p style="color: var(--text-secondary); font-size: 1.1rem;">
-                        Clique em qualquer tópico para acessar a página completa
-                    </p>
-                </div>
-                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; max-height: 60vh; overflow-y: auto; padding: 10px;">
-            `;
-            
-            topics.forEach(topic => {
-                const topicUrl = getTopicUrl(topic.number);
-                content += `
-                    <a href="${topicUrl}" class="topic-card" style="min-height: 80px; flex-direction: row; justify-content: flex-start; gap: 15px; text-align: left;" onclick="event.preventDefault(); navigateToTopic(${JSON.stringify(topic)})">
-                        <div style="font-size: 1.8rem;">${topic.icon}</div>
-                        <div>
-                            <div style="font-weight: bold; color: var(--primary-green);">${topic.number}.</div>
-                            <div style="color: var(--text-primary); font-size: 0.95rem;">${topic.title}</div>
-                        </div>
-                    </a>
-                `;
+        // ========== FERRAMENTAS ==========
+        function switchTab(tabName) {
+            // Remover classe active de todas as tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
             });
             
-            content += '</div>';
-            modalBody.innerHTML = content;
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
             
-            document.getElementById('modal').style.display = 'flex';
+            // Ativar tab selecionada
+            document.querySelector(`.tab[onclick*="${tabName}"]`).classList.add('active');
+            document.getElementById(`${tabName}Tab`).classList.add('active');
         }
 
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-        }
-
-        // ========== FUNÇÕES ADICIONAIS ==========
-        function toggleSound() {
-            soundEnabled = !soundEnabled;
-            const btn = document.querySelector('.header-btn:nth-child(1) i');
-            btn.className = soundEnabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
+        function exportData() {
+            const dataStr = JSON.stringify(userData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
             
-            showNotification(soundEnabled ? '🔊 Som ativado' : '🔇 Som desativado');
+            const exportFileDefaultName = `biolomemo_backup_${new Date().toISOString().slice(0,10)}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            showNotification('Dados exportados com sucesso!');
         }
 
-        function showNotification(message, type = 'info') {
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        userData = importedData;
+                        saveUserData();
+                        createNeuronsGrid();
+                        updateProgress();
+                        showNotification('Dados importados com sucesso!');
+                    } catch (error) {
+                        alert('Erro ao importar dados. Arquivo inválido.');
+                    }
+                };
+                
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+
+        function clearData() {
+            if (confirm('Tem certeza que deseja limpar todos os dados? Isso não pode ser desfeito.')) {
+                resetUserData();
+                createNeuronsGrid();
+                showNotification('Todos os dados foram limpos.');
+            }
+        }
+
+        // ========== EFEITOS VISUAIS ==========
+        function createParticles() {
+            const bg = document.getElementById('neuralBg');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'neural-particle';
+                
+                // Posição aleatória
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Tamanho aleatório
+                const size = 1 + Math.random() * 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Atraso na animação
+                particle.style.animationDelay = `${Math.random() * 20}s`;
+                
+                // Cor aleatória
+                const colors = [
+                    'rgba(14, 165, 233, 0.5)',
+                    'rgba(139, 92, 246, 0.5)',
+                    'rgba(16, 185, 129, 0.5)'
+                ];
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                bg.appendChild(particle);
+            }
+        }
+
+        function showNotification(message) {
+            // Criar elemento de notificação
             const notification = document.createElement('div');
             notification.style.cssText = `
                 position: fixed;
-                top: 80px;
+                top: 20px;
                 right: 20px;
-                background: ${type === 'warning' ? 'rgba(245, 158, 11, 0.9)' : 'rgba(16, 185, 129, 0.9)'};
+                background: linear-gradient(45deg, #0ea5e9, #8b5cf6);
                 color: white;
                 padding: 15px 25px;
                 border-radius: 10px;
-                z-index: 10000;
+                z-index: 1000;
                 font-weight: 600;
-                backdrop-filter: blur(10px);
-                border: 1px solid ${type === 'warning' ? '#f59e0b' : 'var(--primary-green)'};
-                transform: translateX(120%);
-                transition: transform 0.3s ease;
-                max-width: 300px;
-                word-wrap: break-word;
+                box-shadow: 0 5px 20px rgba(14, 165, 233, 0.3);
+                animation: slideIn 0.3s ease;
             `;
             
             notification.textContent = message;
             document.body.appendChild(notification);
             
+            // Remover após 3 segundos
             setTimeout(() => {
-                notification.style.transform = 'translateX(0)';
-            }, 10);
-            
-            setTimeout(() => {
-                notification.style.transform = 'translateX(120%)';
+                notification.style.animation = 'slideOut 0.3s ease';
                 setTimeout(() => {
                     document.body.removeChild(notification);
                 }, 300);
             }, 3000);
+            
+            // Adicionar animações CSS
+            if (!document.querySelector('#notificationStyles')) {
+                const style = document.createElement('style');
+                style.id = 'notificationStyles';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOut {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
         }
 
-        function showPageStructure(topic) {
-            const modalTitle = document.getElementById('modalTitleText');
-            const modalBody = document.getElementById('modalBody');
+        // ========== ATALHOS DE TECLADO ==========
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('studyInterface').style.display === 'flex') {
+                returnToGrid();
+            }
             
-            modalTitle.textContent = `Estrutura para: ${topic.title}`;
-            
-            const content = `
-                <div style="max-width: 600px; margin: 0 auto;">
-                    <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 25px; margin-bottom: 20px;">
-                        <h3 style="color: var(--primary-green); margin-bottom: 15px;">📁 Estrutura da Pasta:</h3>
-                        <code style="display: block; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-bottom: 15px; color: var(--light-green); font-family: 'Source Code Pro', monospace; white-space: pre-wrap;">
-/ (diretório raiz)
-├── index.html (esta página)
-└── /topico-${topic.number.padStart(2, '0')}/
-    ├── index.html (página principal do tópico)
-    ├── estilo.css
-    ├── script.js
-    └── /quizzes/ (pasta opcional)
-</code>
-                        
-                        <p style="color: var(--text-secondary); margin-top: 15px;">
-                            <strong>URL do tópico:</strong><br>
-                            <code style="color: var(--light-green);">${getTopicUrl(topic.number)}</code>
-                        </p>
-                    </div>
-                    
-                    <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 25px;">
-                        <h3 style="color: var(--primary-green); margin-bottom: 15px;">📝 Conteúdo sugerido:</h3>
-                        <ul style="color: var(--text-secondary); padding-left: 20px; line-height: 1.6;">
-                            <li>Explicação teórica resumida</li>
-                            <li>Imagens e diagramas</li>
-                            <li>Exemplos práticos</li>
-                            <li>Quiz de fixação (5-10 perguntas)</li>
-                            <li>Links para material complementar</li>
-                            <li>Exercícios resolvidos</li>
-                        </ul>
-                    </div>
-                </div>
-            `;
-            
-            modalBody.innerHTML = content;
-            document.getElementById('modal').style.display = 'flex';
-        }
+            if (e.ctrlKey && e.key === 's' && currentChapter) {
+                e.preventDefault();
+                saveNotes();
+            }
+        });
 
-        function setupEventListeners() {
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    closeModal();
-                    hideLoading();
-                }
-            });
+        // ========== DETECÇÃO DE KODULAR ==========
+        if (/Kodular|WebView|Android.*AppleWebKit/.test(navigator.userAgent)) {
+            console.log("📱 Modo Kodular detectado - Aplicando otimizações...");
             
-            document.getElementById('modal').addEventListener('click', (e) => {
-                if (e.target === document.getElementById('modal')) {
-                    closeModal();
-                }
-            });
-        }
-
-        function optimizeForMobile() {
-            console.log('📱 Aplicando otimizações para dispositivos móveis...');
-            
-            document.querySelectorAll('a, button, .topic-card').forEach(el => {
-                el.style.minHeight = '44px';
-            });
-            
-            document.documentElement.style.cssText += `
-                -webkit-overflow-scrolling: touch;
-                overscroll-behavior: none;
-                touch-action: manipulation;
-            `;
-        }
-
-        // ========== INICIALIZAR APÓS CARREGAMENTO ==========
-        window.onload = function() {
+            // Forçar fullscreen
             setTimeout(() => {
-                showNotification('🏛️ Bem-vindo ao Palácio da Biologia!');
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                }
             }, 1000);
             
-            setTimeout(() => {
-                if (!localStorage.getItem('firstVisit')) {
-                    showHelp();
-                    localStorage.setItem('firstVisit', 'true');
-                }
-            }, 2000);
-        };
+            // Adicionar estilo para scroll suave
+            document.body.style.cssText += `
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior: none;
+            `;
+        }
     </script>
 </body>
 </html>
